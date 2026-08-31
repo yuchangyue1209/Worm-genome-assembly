@@ -15,12 +15,12 @@ flye --nano-raw worm_all.filt1k.top95.fastq.gz \
 
 
 test
-# 连续性
+# Assembly contiguity
 
 test env
 quast -t 16 -o quast.flye flye_top95/assembly.fasta
 
-# 完整度（BUSCO，用 metazoa 或 eukaryota）
+# Assembly completeness with the metazoa or eukaryota BUSCO lineage
 busco -i flye_top95/assembly.fasta -l metazoa_odb10 -m genome -c 32 -o busco.flye
 
 
@@ -39,7 +39,7 @@ cd /work/cyu/assembly/worm/hifiasm
 # QUAST
 quast -t 32 -o quast.worm_hifiasm worm.asm.p_ctg.fa
 
-# BUSCO（假设继续用 metazoa_odb10）
+# BUSCO using the metazoa_odb10 lineage
 busco -i worm.asm.p_ctg.fa \
       -l metazoa_odb10 \
       -m genome \
@@ -50,13 +50,13 @@ busco -i worm.asm.p_ctg.fa \
 
 cd /work/cyu/assembly/worm/hifiasm
 
-# 1. ONT reads 对回 primary 组装
+# 1. Align ONT reads to the primary assembly
 minimap2 -x map-ont -t 32 \
   worm.asm.p_ctg.fa \
   /work/cyu/assembly/worm/worm_all.filt1k.top95.fastq.gz \
   > aln.r1.paf
 
-# 2. 第一轮 Racon polishing
+# 2. First round of Racon polishing
 racon -t 32 \
   /work/cyu/assembly/worm/worm_all.filt1k.top95.fastq.gz \
   aln.r1.paf \
@@ -104,7 +104,7 @@ busco -i worm.asm.p_ctg.fa \
 
 cd /work/cyu/assembly/worm/hifiasm
 
-# Round 1: 比对
+# Round 1: read alignment
 minimap2 -x map-ont -t 32 \
   worm_q10.asm.p_ctg.fa \
   /work/cyu/assembly/worm/worm_all.top90.q10.fastq.gz \
@@ -119,13 +119,13 @@ racon -t 32 \
 
 cd /work/cyu/assembly/worm/hifiasm
 
-# 用 r1 版本再对一次 reads 做比对
+# Realign reads to the round-1 polished assembly
 minimap2 -x map-ont -t 32 \
   worm_q10.polish.r1.fa \
   /work/cyu/assembly/worm/worm_all.top90.q10.fastq.gz \
   > worm_q10.r2.paf
 
-# 第二轮 Racon polishing
+# Second round of Racon polishing
 racon -t 32 \
   /work/cyu/assembly/worm/worm_all.top90.q10.fastq.gz \
   worm_q10.r2.paf \
@@ -151,7 +151,7 @@ quast -t 16 \
   worm_q10.polish.medaka.fa
 cd /work/cyu/assembly/worm/hifiasm
 
-# 方便后面写命令：主装本统一叫 asm.fa，ONT reads 叫 ont.q10.fastq.gz
+# Define convenient links for the assembly and filtered ONT reads
 ln -s worm_q10.polish.medaka.fa asm.fa
 ln -s /work/cyu/assembly/worm/worm_all.top90.q10.fastq.gz ont.q10.fastq.gz
 
@@ -163,43 +163,43 @@ cd /work/cyu/assembly/worm/hifiasm
 mkdir -p purge_q10
 cd purge_q10
 
-# 路径变量（方便后面命令）
+# Path variables used below
 ASM=../worm_q10.polish.medaka.fa
 READS=/work/cyu/assembly/worm/worm_all.top90.q10.fastq.gz
 PD=/work/cyu/purge_dups/src
-#minimap2 把 ONT reads 比到最终组装上
+# Align ONT reads to the polished assembly with minimap2
 
 minimap2 -t 32 -x map-ont "$ASM" "$READS" | gzip -c > reads_vs_asm.paf.gz
 
 
 conda activate poolseq_env
-# 统计 coverage
+# Calculate the coverage distribution
 "$PD"/pbcstat reads_vs_asm.paf.gz
-# 会得到两个文件：PB.base.cov 和 PB.stat
+# Expected outputs: PB.base.cov and PB.stat
 ls PB.*
-# 根据 PB.stat 计算 cutoff
+# Estimate purge_dups cutoffs from PB.stat
 "$PD"/calcuts PB.stat > cutoffs
 cat cutoffs
 
-# ⚠️ 从这里开始，必须用装有 purge_dups 的 env：poolseq_env
+# The following commands require the poolseq_env environment with purge_dups
 conda activate poolseq_env
 
-# 2.1 统计 coverage 分布
+# 2.1 Calculate the coverage distribution
 "$PD"/pbcstat reads_vs_asm.paf.gz
 
-# 会生成：
+# Expected outputs:
 #   PB.base.cov
 #   PB.stat
 ls PB.*
 
-# 2.2 根据 PB.stat 估计 cutoff
+# 2.2 Estimate cutoffs from PB.stat
 "$PD"/calcuts PB.stat > cutoffs
 
 echo "==== cutoffs ===="
 cat cutoffs
 echo "================="
 
-# 确保在有 purge_dups 的 env 里
+# Ensure that purge_dups is available in the active environment
 
 ASM=/work/cyu/assembly/worm/hifiasm/worm_q10.polish.medaka.fa
 PD=/work/cyu/purge_dups/src
@@ -207,9 +207,8 @@ PD=/work/cyu/purge_dups/src
 "$PD"/split_fa "$ASM" > asm.split.fa
 ls asm.split.fa
 
-#组装 vs 组装 自比对（要用有 minimap2 的 env）
-# 换到有 minimap2 的环境，比如：
-conda activate test  # 或 base，看你哪里装了 minimap2
+# Assembly self-alignment requires an environment containing minimap2
+conda activate test  # Alternatively use another environment with minimap2
 
 minimap2 -t 32 -xasm5 -DP asm.split.fa asm.split.fa \
   | gzip -c > asm.split.self.paf.gz
@@ -217,7 +216,7 @@ minimap2 -t 32 -xasm5 -DP asm.split.fa asm.split.fa \
 ls asm.split.self.paf.gz
 
 
-conda activate poolseq_env  # 回到有 purge_dups 的 env
+conda activate poolseq_env  # Return to the environment containing purge_dups
 
 "$PD"/purge_dups -2 \
   -T cutoffs \
@@ -242,8 +241,7 @@ ls -lh worm_q10.medaka*.fa
 
 
 
-#test 参数asm10
-# 重新自比对（更宽松的 divergent 模式）
+# Test the asm10 preset using a more permissive self-alignment
 conda activate test
 minimap2 -t 32 -xasm10 -DP asm.split.fa asm.split.fa \
   | gzip -c > asm.split.self.asm10.paf.gz
@@ -259,14 +257,14 @@ $PD/get_seqs dups.asm10.bed "$ASM"
 mv purged.fa worm_q10.medaka.purged.asm10.fa
 mv hap.fa    worm_q10.medaka.hap.asm10.fa
 
-# 对新的 purged 版再跑一次 QUAST / BUSCO
+# Run QUAST and BUSCO on the new purged assembly
 quast -t 16 -o quast.worm_medaka_purged.asm10 worm_q10.medaka.purged.asm10.fa
 busco -i worm_q10.medaka.purged.asm10.fa -l metazoa_odb10 -m genome -c 32 \
       -o busco.worm_medaka_purged.asm10
 
 
 
-结果和asm5一样
+# The result was identical to the asm5 run.
 
 
 
@@ -348,29 +346,29 @@ ASM=worm_q10.medaka.purged.asm10.fa
 BAM=ont_vs_asm.chimera.bam
 T=32
 
-# 1) 确保有fai
+# 1. Ensure that the FASTA index exists
 samtools faidx "$ASM"
 
-# 2) contig长度
+# 2. Extract contig lengths
 cut -f1,2 "$ASM.fai" > contig.len.tsv
 
-# 3) contig平均覆盖度（用现成bam）
+# 3. Calculate mean contig depth from the existing BAM
 samtools coverage -w 0 "$BAM" > contig.coverage.tsv
 
 # 4) contig GC%
 seqkit fx2tab -n -g "$ASM" > contig.gc.tsv
 
-# 5) 合并成一个总表：contig  length  mean_depth  GC
+# 5. Combine contig length, mean depth, and GC into one table
 awk 'BEGIN{OFS="\t"}
   NR==FNR{len[$1]=$2; next}
   FNR==1{next}
-  {depth[$1]=$7}  # samtools coverage: 7列一般是 mean depth（如果你版本列不同我再帮你改）
+  {depth[$1]=$7}  # Column 7 is mean depth in this samtools coverage output
   END{
     for(c in len) print c, len[c], (c in depth?depth[c]:"NA")
   }' contig.len.tsv contig.coverage.tsv \
   | sort -k2,2nr > contig.len.depth.tsv
 
-# 把GC加进去
+# Add GC content
 awk 'BEGIN{OFS="\t"}
   NR==FNR{gc[$1]=$2; next}
   {print $0, ( $1 in gc ? gc[$1] : "NA")}' contig.gc.tsv contig.len.depth.tsv \
@@ -393,7 +391,7 @@ awk 'BEGIN{OFS="\t"} $3!="NA"{print $3}' contig.len.depth.gc.tsv \
 
 
 
-MED=50   # <-- 用你上一步算出来的中位数替换
+MED=50   # Replace with the median depth calculated in the preceding step
 
 awk -v med="$MED" 'BEGIN{OFS="\t"}
   {
@@ -655,4 +653,3 @@ BEGIN{
         NR,$1,$2,$2/1000000
 }' \
 > worm.no_rDNA.contig_lengths.with_rank.tsv
-

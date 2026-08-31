@@ -73,7 +73,7 @@ seqkit grep \
 -o "$OUT/mt_reads.fastq.gz"
 
 ###############################################################################
-# Downsample to ~1000× coverage
+# Downsample to approximately 1,000x coverage
 ###############################################################################
 
 seqkit head \
