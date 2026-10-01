@@ -1,1 +1,4 @@
 Single-cell-worm/
+__pycache__/
+*.pyc
+comparative-genomics/config.sh

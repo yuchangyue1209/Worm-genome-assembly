@@ -11,6 +11,10 @@ separate submission stage.
 
 ## Workflow scripts
 
+The single-species assembly and annotation workflow remains under
+`workflow-scripts/`. The downstream multi-species analysis is maintained
+separately under [`comparative-genomics/`](comparative-genomics/README.md).
+
 | Script | Purpose |
 |---|---|
 | `01_ont_nuclear_assembly.sh` | ONT read filtering, hifiasm assembly, Racon/Medaka polishing, purge_dups, and assembly QC |
