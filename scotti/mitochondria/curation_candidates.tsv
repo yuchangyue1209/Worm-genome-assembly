@@ -1,0 +1,4 @@
+gene	seqid	start_1based	end_inclusive	strand	status	evidence
+rrnL	contig_1	12124	13172	-	proposed_not_applied	Own solidus rrnL full-query BLAST; 90.190 percent identity; boundaries require review
+trnH	contig_1	5365	5427	-	proposed_not_applied	MW602521.1 full-query BLAST 96.875 percent; ARAGORN 5364-5428
+cox3	contig_1	5428	6070	-	proposed_not_applied	MW602521.1 BLAST 81.493 percent; table9 GTG start; 214 full codons plus terminal T; no internal stop
