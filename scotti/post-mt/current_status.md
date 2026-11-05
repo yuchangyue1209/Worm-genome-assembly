@@ -94,12 +94,23 @@ Audit: `results/annotation_qc/06_protein_support_audit/protein_support.tsv`.
 
 Hits do not establish full-length support, and absence of a Swiss-Prot hit does not establish a false gene. No proteins have been removed. Short/long/X models require additional evidence.
 
-## Functional annotation pending
+## Functional annotation
 
-The first eggNOG launch failed at argument parsing: this installed emapper.py rejects --input and --method. Corrected command uses -i and -m diamond, with --data_dir /work/cyu/databases/eggnog_mapper, all 11,471 proteins, prefix scotti_braker, output results/functional/02_eggnog, and 32 CPUs. A corrected run command was supplied; successful start/completion has not yet been reported.
-Do not use --override or copy solidus's expected row count of 8,177 into cotti validation. Script 25 preserves existing logs and refuses existing emapper result files. Inspect any active job before launching.
-InterProScan remains pending. Script 26 is a guarded template adapted from the solidus installation; verify its Java/runtime requirements before execution. It removes only a terminal stop from the search copy, preserves IDs and X, and rejects unsupported residues. Original proteins remain unchanged.
+The first eggNOG launch failed at argument parsing because the installed
+emapper.py rejects --input and --method. The corrected run used `-i` and
+`-m diamond`, all 11,471 proteins and 32 CPUs. It subsequently completed in
+2,417 seconds with 9,225 processed hits. Do not copy solidus's expected row
+count of 8,177 into cotti validation.
+
+InterProScan was started successfully on all 11,471 proteins using
+InterProScan 5.78-109.0. The search copy removes only terminal stops and leaves
+the original BRAKER proteins unchanged. Final completion and output counts
+still need to be recorded before evidence integration.
 
 ## Current next steps
 
-Confirm corrected eggNOG execution; then validate/launch InterProScan when resources permit. Integrate evidence and review unsupported short models and potential long-gene fusions before any conservative filtering. The 70 BUSCO candidate groups remain a separate review set, not automatically rescued gene models. See candidate_review.md.
+Confirm and record InterProScan completion. Then integrate Swiss-Prot, eggNOG
+and InterPro evidence and review unsupported short models and potential
+long-gene fusions before conservative filtering. The 70 BUSCO candidate groups
+remain a separate review set, not automatically rescued gene models. See
+candidate_review.md.

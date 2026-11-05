@@ -17,8 +17,10 @@ documents assembly and annotation of the *S. solidus* reference genome.
 - `T_solium`
 - `T_multiceps`
 
-These ten species form the current preliminary dataset. *S. cotti* is pending
-and will bring the final dataset to eleven species. The fragmented
+These ten species form the current preliminary dataset. The *S. cotti* BRAKER
+annotation, longest-isoform proteome and odb10/odb12 protein BUSCO assessments
+are complete, but its filtered release is pending. Adding that release will
+bring the final dataset to eleven species. The fragmented
 *S. erinaceieuropaei* PRJEB1202 annotation is deliberately excluded from the
 primary analysis; *Spirometra* sp. Aus1 is used as the representative of that
 lineage.
@@ -140,8 +142,8 @@ python comparative-genomics/scripts/02c_busco_summary.py \
 The ten-species preliminary dataset can be used for QC, functional annotation,
 secretome analysis, exploratory OrthoFinder analyses, and preliminary gene
 trees. Final OrthoFinder, CAFE5, focal-species gain/loss, dN/dS, branch-site,
-TE-gene association, and microsynteny analyses must wait for the final
-*S. cotti* annotation.
+TE-gene association, and microsynteny analyses must wait for the filtered and
+validated *S. cotti* release, not for another BUSCO run.
 
 The public *S. proliferum* SprJ_4.0 annotation contains 29,231 gene/mRNA
 models and 28,993 translated proteins. Each gene has at most one mRNA, so no

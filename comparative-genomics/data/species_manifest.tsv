@@ -1,6 +1,6 @@
 Species	Role	Accession_or_source	Current_use
 S_solidus	Focal	local final release	all preliminary analyses
-S_cotti	Focal	local assembly; annotation pending	assembly and repeat analyses only
+S_cotti	Focal	local BRAKER candidate; curated release pending	BRAKER, longest isoform and odb10/odb12 protein BUSCO complete; final filtering pending
 L_intestinalis	Diphyllobothriidea background	local published annotation	use cautiously because of low protein BUSCO
 Spirometra_Aus1	Diphyllobothriidea background	GCA_051168835.1	all background analyses
 D_latus	Diphyllobothriidea background	GCA_900617775.1	use cautiously because of low protein BUSCO

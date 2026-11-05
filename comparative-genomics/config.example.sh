@@ -17,8 +17,9 @@ MEROPS_FASTA=${MEROPS_FASTA:-/work/cyu/databases/merops_12.4/pepunit.lib}
 BUSCO_LINEAGE=${BUSCO_LINEAGE:-metazoa_odb10}
 THREADS=${THREADS:-32}
 
-# Current analysis set. S_cotti must be added only after its final annotation
-# has passed the same standardization and QC steps.
+# Current analysis set. The S_cotti BRAKER candidate and protein BUSCO runs are
+# complete, but it must be added only after final filtering, release and the
+# same standardization checks.
 SPECIES=(
   S_solidus
   L_intestinalis
@@ -37,5 +38,6 @@ SPECIES=(
 # usable public structural annotation.
 EXCLUDED_SPECIES=(S_erinaceieuropaei_PRJEB1202)
 
-# Add to SPECIES only when genome, GFF3, CDS, and primary proteins are final.
+# Add to SPECIES only when curated genome, GFF3, CDS, and primary proteins are
+# released and linked into the standardized project layout.
 PENDING_SPECIES=(S_cotti)

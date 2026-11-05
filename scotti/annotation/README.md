@@ -29,6 +29,9 @@ audited and a versioned release built.
 - RepeatMasker reports 69.93% interspersed repeats; this is annotation context,
   not a reason to discard genes by GFF keyword matching.
 - BRAKER3 ETP produced the current 11,471-protein candidate set.
+- A longest-isoform set containing 9,241 proteins has been generated. Protein
+  BUSCO is complete with both lineage datasets: odb10 C=68.8% and odb12
+  C=73.5%.
 - Swiss-Prot search is complete.
 - eggNOG-mapper is complete (`Total hits processed: 9225`).
 - InterProScan was started successfully on all 11,471 sanitized proteins.
