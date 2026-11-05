@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Copy to config.sh and edit for the server. Do not commit private paths or data.
-PROJECT=${PROJECT:-"${HOME}/Schistocephalus_comparative_genomics"}
+PROJECT=${PROJECT:-/work/cyu/Schistocephalus_comparative_genomics}
 RAW=${RAW:-"${PROJECT}/01_raw_data"}
 STD=${STD:-"${PROJECT}/02_standardized_data"}
 QC=${QC:-"${PROJECT}/03_qc"}
@@ -12,6 +12,8 @@ SECRETOME=${SECRETOME:-"${PROJECT}/06_secretome"}
 
 INTERPROSCAN=${INTERPROSCAN:-/work/cyu/software/interproscan-5.78-109.0/interproscan.sh}
 EGGNOG_DB=${EGGNOG_DB:-/work/cyu/databases/eggnog_mapper}
+MEROPS_DB=${MEROPS_DB:-/work/cyu/databases/merops_12.4/merops_pepunit}
+MEROPS_FASTA=${MEROPS_FASTA:-/work/cyu/databases/merops_12.4/pepunit.lib}
 BUSCO_LINEAGE=${BUSCO_LINEAGE:-metazoa_odb10}
 THREADS=${THREADS:-32}
 
@@ -22,6 +24,7 @@ SPECIES=(
   L_intestinalis
   Spirometra_Aus1
   D_latus
+  S_proliferum
   E_multilocularis
   H_microstoma
   E_granulosus
@@ -29,9 +32,10 @@ SPECIES=(
   T_multiceps
 )
 
-# Optional sensitivity-analysis taxon. PRJEB1202 is highly fragmented and
-# should not be used for strict gene-loss or CAFE5 inference.
-OPTIONAL_SPECIES=(S_erinaceieuropaei_PRJEB1202)
+# Deliberately excluded from the primary analysis. PRJEB1202 is highly
+# fragmented and its protein count is likely inflated; PRJEB35375 lacks a
+# usable public structural annotation.
+EXCLUDED_SPECIES=(S_erinaceieuropaei_PRJEB1202)
 
 # Add to SPECIES only when genome, GFF3, CDS, and primary proteins are final.
 PENDING_SPECIES=(S_cotti)

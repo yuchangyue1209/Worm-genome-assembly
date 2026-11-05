@@ -12,6 +12,6 @@ The new SAMBA assembly was evaluated but was not selected for annotation. No add
 
 The mitochondrial working package on the server contains a 15,437 bp assembly and 36 annotated genes. Its GFF3 passed GenomeTools validation; it remains a working candidate. The revised server-side v2 curation script has not been synchronized locally. Do not overwrite the validated working package using the earlier local script 08.
 
-RepeatModeler has been started. The RNA rRNA pilot is complete. Full RNA screening was redirected to temporary storage on /work, but a successful full-run start has not yet been confirmed. STAR, RepeatMasker, and BRAKER have not been run for this workflow.
+RepeatModeler, RepeatMasker, full rRNA screening, STAR mapping, and nuclear BAM preparation are complete. BRAKER3 ETP completed successfully: 9,241 genes and 11,471 protein isoforms. Protein QC, BUSCO, and Swiss-Prot are complete. The eggNOG command has been corrected to -i/-m; successful execution has not yet been reported. InterProScan remains pending. See [current status and results](post-mt/current_status.md).
 
 This update organizes local code and documentation only. It does not submit or rerun server analyses.

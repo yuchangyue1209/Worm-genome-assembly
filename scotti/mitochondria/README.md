@@ -1,7 +1,7 @@
 # S. cotti mitochondrial assembly and annotation
 
 Compiled on 2026-10-27 for **S. cotti / scotti_2 / PacBio HiFi**.
-The original `solidus/workflow-scripts/02_mitochondrial_assembly_annotation.sh` describes
+The original `workflow-scripts/02_mitochondrial_assembly_annotation.sh` describes
 **S. solidus / ONT** and remains unchanged.
 This directory contains reproducible workflow code and results reported in the
 analysis session. Large data files and actual analysis outputs remain on stickleback.
