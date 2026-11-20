@@ -48,6 +48,12 @@ comparative-genomics/
     09_integrate_secretome.sh
     10_parse_merops.py
     10_merops.sh
+    11_plot_panel_a_exploratory.py
+    12_plot_iqtree_concordance.py
+    13_prepare_singlecopy_phylogeny.py
+    14_run_iqtree_concordance.sh
+    15_summarize_deep_topology_support.py
+    16_run_scotti_without32_sensitivity_orthofinder.sh
 ```
 
 Copy the configuration and edit paths for the server:
@@ -139,11 +145,45 @@ python comparative-genomics/scripts/02c_busco_summary.py \
 
 ## Current completion boundary
 
-The ten-species preliminary dataset can be used for QC, functional annotation,
-secretome analysis, exploratory OrthoFinder analyses, and preliminary gene
-trees. Final OrthoFinder, CAFE5, focal-species gain/loss, dN/dS, branch-site,
-TE-gene association, and microsynteny analyses must wait for the filtered and
-validated *S. cotti* release, not for another BUSCO run.
+An exploratory eleven-species OrthoFinder run now includes the 9,234-protein
+`Scotti_filtered7_v1` candidate set. It is explicitly not the frozen final
+analysis because cotti and *S. proliferum* TE review remains unfinished. The
+run found 16,669 orthogroups. Final membership in `Orthogroups.tsv` contains
+373 strict one-copy-per-species groups; this final membership table, rather
+than the cached 374-group single-copy list, is the source of truth for the
+phylogenomic input.
+
+The exploratory 373-locus supermatrix contains 190,437 amino-acid sites.
+Deep topology is conflicted across gene trees: 144/373 support a basal
+*Sparganum*/*Spirometra* lineage, 68/373 support basal *Schistocephalus*,
+129/373 support basal *D. latus*/*L. intestinalis*, and 32/373 support other
+resolutions. In contrast, the *S. cotti*–*S. solidus* relationship is stable
+(gCF 86.06%; sCF 92.20%). Treat the tree and figures as exploratory until the
+protein inputs are frozen and the final OrthoFinder run is complete.
+
+The completed cotti TE case review provides a second, reversible input with
+9,202 proteins after omitting 32 strong TE-associated primary candidates. Its
+odb12 BUSCO result is identical to the 9,234-protein input. Use script 16 to
+run it as a separate paired OrthoFinder sensitivity analysis; never overwrite
+the baseline exploratory run. If the 9,202 set is later promoted to the formal
+input, all OrthoFinder-dependent outputs (orthogroups, strict single-copy loci,
+species tree, duplication/family summaries, and downstream CAFE5/selection
+inputs) must be regenerated. Uniform functional annotations can be subset by
+protein ID and do not need to be recomputed solely because these 32 records
+were omitted.
+
+The first server sensitivity attempt named
+`exploratory11_scotti_without32_v1` is invalid and must not be interpreted:
+the staging function expanded its target before assigning the local species
+name, so the cotti copy overwrote `T_multiceps.faa`; OrthoFinder consequently
+received ten files. Script 16 is corrected, verifies all staged counts and
+SHA256 values after copying, and defaults to the new `_v2` run directory.
+
+Do not transfer internal-branch duplication counts from the OrthoFinder tree
+onto a different IQ-TREE topology. Terminal duplication counts may be shown
+separately with their exploratory status stated. Final CAFE5, focal-species
+gain/loss, dN/dS, branch-site, TE–gene association, and microsynteny analyses
+still require the frozen protein set and final rerun.
 
 The public *S. proliferum* SprJ_4.0 annotation contains 29,231 gene/mRNA
 models and 28,993 translated proteins. Each gene has at most one mRNA, so no

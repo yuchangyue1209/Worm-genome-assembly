@@ -3,9 +3,10 @@ set -euo pipefail
 
 source "$(dirname "$0")/common.sh"
 require_command busco
+BUSCO_LINEAGE=${BUSCO_LINEAGE_OVERRIDE:-${BUSCO_LINEAGE}}
 
-OUT=${QC}/busco_protein
-LOG=${QC}/logs/busco_protein
+OUT=${QC}/busco_protein/${BUSCO_LINEAGE}
+LOG=${QC}/logs/busco_protein/${BUSCO_LINEAGE}
 mkdir -p "${OUT}" "${LOG}"
 
 for sp in "${SPECIES[@]}"; do
@@ -15,11 +16,11 @@ for sp in "${SPECIES[@]}"; do
         echo "SKIP ${sp}: BUSCO summary exists"
         continue
     fi
-    echo "START ${sp}: $(date)"
+    echo "START ${sp} ${BUSCO_LINEAGE}: $(date)"
     if busco -i "${protein}" -o "${sp}" --out_path "${OUT}" \
         -m proteins -l "${BUSCO_LINEAGE}" -c "${THREADS}" \
         > "${LOG}/${sp}.log" 2>&1; then
-        echo "FINISH ${sp}: $(date)"
+        echo "FINISH ${sp} ${BUSCO_LINEAGE}: $(date)"
     else
         status=$?
         echo "FAILED ${sp}: exit=${status}; see ${LOG}/${sp}.log" >&2

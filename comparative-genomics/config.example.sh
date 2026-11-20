@@ -14,12 +14,11 @@ INTERPROSCAN=${INTERPROSCAN:-/work/cyu/software/interproscan-5.78-109.0/interpro
 EGGNOG_DB=${EGGNOG_DB:-/work/cyu/databases/eggnog_mapper}
 MEROPS_DB=${MEROPS_DB:-/work/cyu/databases/merops_12.4/merops_pepunit}
 MEROPS_FASTA=${MEROPS_FASTA:-/work/cyu/databases/merops_12.4/pepunit.lib}
-BUSCO_LINEAGE=${BUSCO_LINEAGE:-metazoa_odb10}
+BUSCO_LINEAGE=${BUSCO_LINEAGE:-metazoa_odb12}
 THREADS=${THREADS:-32}
 
-# Current analysis set. The S_cotti BRAKER candidate and protein BUSCO runs are
-# complete, but it must be added only after final filtering, release and the
-# same standardization checks.
+# Ten-species background set. Keep stable standardized inputs unchanged.
+# cotti filtered7 is staged separately for explicitly labeled exploratory runs.
 SPECIES=(
   S_solidus
   L_intestinalis
@@ -41,3 +40,12 @@ EXCLUDED_SPECIES=(S_erinaceieuropaei_PRJEB1202)
 # Add to SPECIES only when curated genome, GFF3, CDS, and primary proteins are
 # released and linked into the standardized project layout.
 PENDING_SPECIES=(S_cotti)
+
+# Six-taxon core describes the biological design; it is not a command to remove outgroups.
+FOCAL_SPECIES=(S_solidus S_cotti)
+CORE_DIPHYLLOBOTHRIIDEA=(S_solidus S_cotti L_intestinalis D_latus Spirometra_Aus1 S_proliferum)
+INCLUDE_SCOTTI_CANDIDATE=${INCLUDE_SCOTTI_CANDIDATE:-0}
+SCOTTI_CANDIDATE=${SCOTTI_CANDIDATE:-/work/cyu/annotation/scotti-annotation/results/filtered_candidates/Scotti_filtered7_v1}
+SCOTTI_CANDIDATE_STAGE=${SCOTTI_CANDIDATE_STAGE:-"${PROJECT}/02_standardized_candidates/Scotti_filtered7_v1"}
+# Unique new run ID prevents stale symlinks/taxa from an older OrthoFinder input directory.
+ORTHO_RUN_ID=${ORTHO_RUN_ID:-"background10_$(date +%Y%m%d_%H%M%S)"}

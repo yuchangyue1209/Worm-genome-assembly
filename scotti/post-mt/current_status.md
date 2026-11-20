@@ -1,6 +1,8 @@
 # Current annotation status
 
-Updated from user-supplied server output through 2026-11-04 post-BRAKER QC and the eggNOG CLI correction. Server logs label these runs Oct 31, 2026; this record preserves that label without changing it to the local client date. Local organization does not rerun server analyses.
+Updated from user-supplied server output through the 2026-11-09 TE review and
+exploratory comparative analysis. Server log dates are preserved as reported.
+Local organization does not rerun server analyses.
 
 ## Completed repeats
 
@@ -102,15 +104,49 @@ emapper.py rejects --input and --method. The corrected run used `-i` and
 2,417 seconds with 9,225 processed hits. Do not copy solidus's expected row
 count of 8,177 into cotti validation.
 
-InterProScan was started successfully on all 11,471 proteins using
-InterProScan 5.78-109.0. The search copy removes only terminal stops and leaves
-the original BRAKER proteins unchanged. Final completion and output counts
-still need to be recorded before evidence integration.
+InterProScan completed on all 11,471 proteins using InterProScan 5.78-109.0.
+The search copy removed only terminal stops and left the original BRAKER
+proteins unchanged. Its evidence was incorporated into the filtered7 review.
+
+## Filtered7 and TE review
+
+`Scotti_filtered7_v1` contains 9,234 genes/primary proteins and 11,464
+isoforms. It is a candidate comparative input, not a frozen release. The
+non-destructive TE screen identified 100 primary functional candidates and did
+not remove any model. Review tiers were: 8,975 no screening signal, 126 repeat
+context only, 33 generic-domain review, 70 functional-candidate review, 29
+priority functional review, and one host-context review.
+
+The first 30 functional candidates were manually triaged. Six were classified
+as strong TE-associated candidates (`g1102`, `g4531`, `g520`, `g6406`,
+`g6446`, and `g7873`), ten as cellular-function-supported (`g112`, `g1226`,
+`g1365`, `g2456`, `g301`, `g3824`, `g5601`, `g5806`, `g6022`, and `g6936`),
+and 14 remained unresolved. The remaining 84 cases were subsequently reviewed.
+Across all 100 cases, 32 are strong TE-associated candidates for conservative
+exclusion sensitivity analysis, 21 have cellular/shared-domain support and are
+retained, and 47 remain unresolved and retained. The source annotation is
+unchanged.
+
+The optional sensitivity FASTA contains 9,202 primary proteins after omitting
+the 32 strong candidates. Its metazoa_odb12 result is identical to filtered7:
+C:73.5%[S:72.5%,D:1.0%],F:9.8%,M:16.7%,n:672 (494 complete, 66 fragmented,
+112 missing). This demonstrates no BUSCO loss at the reported precision but
+does not certify the set as a final non-TE annotation.
 
 ## Current next steps
 
-Confirm and record InterProScan completion. Then integrate Swiss-Prot, eggNOG
-and InterPro evidence and review unsupported short models and potential
-long-gene fusions before conservative filtering. The 70 BUSCO candidate groups
-remain a separate review set, not automatically rescued gene models. See
-candidate_review.md.
+Run a paired eleven-species OrthoFinder sensitivity analysis with the 9,202
+protein set while preserving the earlier 9,234-protein run. Compare orthogroup
+membership, strict single-copy loci, duplication counts, topology, and focal
+family counts. Resolve unsupported short models, potential long-gene fusions,
+and the 47 unresolved TE cases before deciding whether to freeze a final
+primary proteome. Only then replace the exploratory input and rerun the formal
+orthology and phylogeny workflow.
+The 70 BUSCO candidate groups remain a separate review set, not automatically
+rescued gene models. See candidate_review.md.
+
+The initial sensitivity run directory ending in `without32_v1` is invalid:
+cotti overwrote the staged `T_multiceps.faa` because of a shell local-variable
+expansion bug, leaving ten actual inputs. It must not be used for trees or
+orthogroup comparisons. The corrected script stages into `without32_v2` and
+validates 11 files, sequence counts, and hashes before launching OrthoFinder.

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# PENDING template adapted from solidus. Not yet run or validated against installed CLI.
+# Historical launch template: the cotti run subsequently completed successfully.
 # Environment must provide the Java version required by this InterProScan installation.
-# Do not launch until resources and command help have been reviewed.
+# Do not rerun completed results. Review runtime/resources for any new input.
 source "$(dirname "$0")/00_config.sh"
-[[ "${RUN_INTERPRO:-0}" == 1 ]] || { echo 'Pending template. Review before setting RUN_INTERPRO=1.';exit 0; }
+[[ "${RUN_INTERPRO:-0}" == 1 ]] || { echo 'Historical completed run: disabled by default. Review inputs before explicitly enabling a new run.';exit 0; }
 IPR=/work/cyu/software/interproscan-5.78-109.0
 OUT="$ANNO/results/functional/03_interproscan"
 PROT="$ANNO/results/braker3_etp_v1_retry2/braker.aa"

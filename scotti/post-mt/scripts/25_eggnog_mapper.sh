@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Environment: eggnog_mapper. Corrected installed CLI: -i and -m, NOT --input/--method.
-# First attempt stopped during argument parsing. Corrected execution result not yet reported.
+# First attempt stopped during argument parsing. Completed: 9,225 annotation rows; preserve existing results.
 # Accepts the existing directory with logs only; refuses existing emapper result files.
 source "$(dirname "$0")/00_config.sh"
 PROT="$ANNO/results/braker3_etp_v1_retry2/braker.aa"
@@ -20,4 +20,5 @@ emapper.py --data_dir "$DB" -i "$PROT" -o scotti_braker --output_dir "$OUT" \
  --itype proteins -m diamond --cpu 32 2>&1 | tee "$LOG"
 [[ -s "$OUT/scotti_braker.emapper.annotations" ]]
 awk -F '\t' '!/^#/ && NF {rows++;ids[$1]=1} END {for(id in ids)n++;print "Annotation rows:",rows+0;print "Annotated proteins:",n+0}' "$OUT/scotti_braker.emapper.annotations"
-# No --override and no solidus-specific fixed expected annotation count.
+# The historical restart used --override by explicit authorization. This reusable script does not overwrite results by default.
+# No solidus-specific fixed expected annotation count is imposed.

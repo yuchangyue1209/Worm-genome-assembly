@@ -1,10 +1,10 @@
 Species	Role	Accession_or_source	Current_use
 S_solidus	Focal	local final release	all preliminary analyses
-S_cotti	Focal	local BRAKER candidate; curated release pending	BRAKER, longest isoform and odb10/odb12 protein BUSCO complete; final filtering pending
+S_cotti	Focal	local filtered7 working candidate; final release pending	9234 representative proteins; validated GFF3 and unchanged odb12 BUSCO; exploratory orthology only until final TE/model review
 L_intestinalis	Diphyllobothriidea background	local published annotation	use cautiously because of low protein BUSCO
 Spirometra_Aus1	Diphyllobothriidea background	GCA_051168835.1	all background analyses
 D_latus	Diphyllobothriidea background	GCA_900617775.1	use cautiously because of low protein BUSCO
-S_proliferum	Diphyllobothriidea background	GCA_053814205.1 / PRJDB8966	chromosome-level annotated assembly; TE-associated loci must be filtered before final family analysis
+S_proliferum	Diphyllobothriidea background	GCA_053814205.1 / PRJDB8966	public files audited: 29231 mRNAs, 28993 proteins, 238 no-CDS models; both-lineage BUSCO batch finished; TE IDs pending; InterProScan last observed running
 S_erinaceieuropaei_PRJEB1202	Excluded Diphyllobothriidea	PRJEB1202/WBPS19	not in primary analysis because assembly and annotation are highly fragmented
 E_multilocularis	Cyclophyllidea background	GCA_000469725.3	all background analyses
 H_microstoma	Cyclophyllidea background	PRJEB124/WBPS19	all background analyses

@@ -98,6 +98,11 @@ All scripts and comments are English. These reconstruct commands/results already
 |24_protein_support_audit.py|Completed short/long/X support audit; requires a new --out|
 |25_eggnog_mapper.sh|Corrected installed CLI uses -i/-m; successful run not yet reported|
 |26_interproscan_pending.sh|Guarded template only; no execution reported|
+|32_build_scotti_te_review.py|Builds a non-destructive TE evidence table from RepeatMasker context and functional evidence|
+|33_verify_scotti_te_review_fixture.py|Synthetic regression test for interval arithmetic and review-tier classification|
+|34_review_scotti_te_first30.py|Creates the documented first-30 manual-review packet and decision summaries|
+|35_build_scotti_te_next84_packet.py|Creates the next packet: 14 unresolved first-pass candidates plus 70 remaining candidates|
+|36_finalize_scotti_te_case_review.py|Summarizes all 100 reviewed cases and optionally builds the 9,202-protein TE-exclusion sensitivity set|
 
 Example QC reconstruction in a new output directory:
 ```bash
@@ -107,3 +112,16 @@ Script 20 expects the original documented longest-protein path, not this reconst
 The candidate extraction, overlap, and regional RNA scripts originally supplied inline are summarized in candidate_review.md; they are not falsely represented as fully recovered server scripts here.
 
 The primary-genome and cotti protein BUSCO comparison uses odb10 (954 groups). Comparison with the documented solidus final release uses odb12 (672 groups). Percentages from different lineages must not be treated as a change in annotation quality.
+
+The current `filtered7` candidate contains 9,234 genes/primary proteins and
+11,464 isoforms. TE screening is review-only: 8,975 primary proteins have no
+screening signal, 126 have repeat context only, 33 require generic-domain
+review, 70 require functional-candidate review, 29 are priority functional
+reviews, and one is a host-context review. No gene or protein sequence was
+removed by the screening scripts. The completed case review classifies 32 as
+strong TE-associated candidates, 21 as cellular/shared-domain cases to retain,
+and 47 as unresolved and retained. Script 36 can create a reversible
+9,202-protein sensitivity FASTA that omits only the 32 primary proteins; it is
+not a final non-TE annotation and does not modify the GFF3, CDS, genome, or
+source protein files. Protein BUSCO odb12 is unchanged after exclusion:
+C:73.5%[S:72.5%,D:1.0%],F:9.8%,M:16.7%,n:672.
