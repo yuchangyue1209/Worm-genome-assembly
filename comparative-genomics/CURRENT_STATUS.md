@@ -1,39 +1,117 @@
-# Comparative genomics status — 2026-11-05
+# Comparative genomics status — 20 November 2026
 
-## Species design and existing work
+This combines the user-reported completed analyses with the selected S. cotti
+release. Updating local code/docs does not replace server inputs or launch jobs.
 
-The six-taxon core consists of S_solidus, S_cotti, L_intestinalis, D_latus, Spirometra_Aus1 and S_proliferum. Five Cyclophyllidea background taxa remain in the existing design: E_multilocularis, H_microstoma, E_granulosus, T_solium and T_multiceps. Do not interpret the core list as an instruction to delete these backgrounds.
-The reported BUSCO batch contains ten species (all except cotti), each run with odb10 and odb12: 20 FINISH records. Actual scores and per-run inputs still need to be assembled from source summaries. Do not invent a score table from FINISH messages alone.
-cotti has separate, validated candidate results and can be added explicitly for exploratory orthology, making eleven taxa. Final inference remains pending input curation and TE review.
+## Selected cotti release
 
-## Completed S. proliferum data audit
+`/work/shared/Scotti_release_v1.0_preNCBI_20261118` was published successfully
+on 20 November 2026. The baseline is **9,234 genes/representatives and 11,464
+protein isoforms**, retaining the 32 strong TE-associated candidate genes and
+47 unresolved TE cases. The 9,202-record without32 set is optional sensitivity
+provenance only. [Release details](../scotti/release_v1.0.md).
 
-SprJ_4.0, GCA_053814205.1 / PRJDB8966. Raw directory:
-`/work/cyu/Schistocephalus_comparative_genomics/01_raw_data/S_proliferum_SprJ4/ncbi_dataset/data/GCA_053814205.1`.
-29,231 genes; 29,231 mRNAs; 28,993 proteins; zero multi-mRNA genes. 238 mRNAs have no CDS; all other 28,993 have corresponding protein IDs. Zero FASTA proteins are unreferenced by CDS. These are audited no-CDS models, not automatically designated pseudogenes.
-Audit file: `03_qc/S_proliferum_id_audit_v1/transcript_protein_audit.tsv`. Standardized raw links were created. Completion of the proposed primary-protein link should be checked on the server before launching new jobs.
-The published TE-associated ID list and a reviewed non-TE set remain pending. The earlier chat cites 6,316 loci; their exact identities and mappings must be verified from supplementary source data, not inferred by subtracting that number or keyword filtering.
+Use `proteins/Scotti_proteins.longest_isoform.v1.0.fa` for future baseline
+input freezes. This publication did not alter the existing standardized
+species links, frozen OrthoFinder inputs, orthogroups, trees or figures.
+Compare existing input and release checksums before deciding to rerun.
 
-S_proliferum InterProScan was last observed running after approximately 37 minutes, with 24 CPUs, prefix `05_functional_annotation/interpro/S_proliferum`. Its actual log was not at the template path. No completion or match count has been reported. Find stdout via the live PID's /proc/<PID>/fd/1 if necessary; historical PIDs must not be reused blindly. Other S_proliferum functional/secretome completion states are unconfirmed in this chat.
+## Eleven-species design and BUSCO
 
-## cotti handoff
+Focal species: S_solidus and S_cotti. Diphyllobothriidea backgrounds:
+L_intestinalis, D_latus, Spirometra_Aus1 and S_proliferum. The five
+Cyclophyllidea backgrounds are E_multilocularis, H_microstoma, E_granulosus,
+T_solium and T_multiceps. The six-taxon core is not an instruction to remove
+those backgrounds. S_erinaceieuropaei_PRJEB1202 remains excluded.
 
-Validated candidate: `/work/cyu/annotation/scotti-annotation/results/filtered_candidates/Scotti_filtered7_v1`.
-9,234 genes / representatives; 11,464 isoforms and CDS sequences. GFF3 passed GenomeTools; odb12 C73.5% [S72.5%, D1.0%], F9.8%, M16.7%, n672, unchanged after seven exclusions.
-Primary evidence: Swiss-Prot 6,545; eggNOG 7,351; member-database matches 8,490; integrated InterPro 7,499; any source 8,592. 642 representatives have no hits and are retained. Functional evidence is complete, but product naming, ncRNA work and final structural/TE review remain pending. Do not rerun searches merely to subset representative proteins.
-Use scripts/00d_stage_scotti_candidate.sh to stage a separate candidate set. Stable 02_standardized_data remains unchanged. Candidate staged data are not a finalized release.
+Reported protein-mode metazoa_odb12 results (same 672-group local dataset):
 
-## BUSCO policy
+| Species | C | S | D | F | M |
+|---|---:|---:|---:|---:|---:|
+| S_solidus | 80.4 | 79.9 | 0.4 | 7.0 | 12.6 |
+| S_cotti | 73.5 | 72.5 | 1.0 | 9.8 | 16.7 |
+| L_intestinalis | 28.0 | 27.7 | 0.3 | 17.3 | 54.8 |
+| D_latus | 20.4 | 20.4 | 0.0 | 39.0 | 40.6 |
+| Spirometra_Aus1 | 59.5 | 54.2 | 5.4 | 15.6 | 24.9 |
+| S_proliferum | 63.2 | 58.0 | 5.2 | 19.6 | 17.1 |
+| E_multilocularis | 75.9 | 74.7 | 1.2 | 11.2 | 12.9 |
+| H_microstoma | 72.3 | 71.3 | 1.0 | 11.8 | 15.9 |
+| E_granulosus | 76.3 | 74.3 | 2.1 | 9.2 | 14.4 |
+| T_solium | 65.8 | 65.6 | 0.1 | 15.0 | 19.2 |
+| T_multiceps | 57.1 | 56.4 | 0.7 | 17.3 | 25.6 |
 
-Main cross-species reporting: the same local metazoa_odb12 release, same BUSCO version and protein mode, one protein per gene. Preserve odb10 results for historical/model investigations. Record dataset creation dates and software versions. Different dataset percentages are not directly comparable.
-Script 02b now separates lineage-specific output and log directories, preventing an existing odb10 summary from causing an odb12 skip. Script 02d loops through both lineages. Script 02e discovers legacy and new summaries, preserves all source paths and flags duplicates rather than silently choosing a run. The reported batch is already completed: summarize before resubmitting.
-The legacy 02c summary script remains available for a known single-lineage root; use 02e for the mixed historical tree. Its legacy quality labels are heuristics, not pass/fail biological validation.
+Preserve odb10 for historical/model investigations; percentages from different
+lineages are not changes in quality. The cotti baseline and without32 protein
+sets have zero changes in all 672 BUSCO group statuses. Low-completeness
+annotations, especially Ligula/D. latus, confound absence and contraction claims.
 
-## OrthoFinder boundary
+## Completed S. proliferum work
 
-Script 03 creates a new run directory, copies/freeze protein FASTAs, records source paths and hashes, and never reuses the old shared input folder. This avoids stale species symlinks. INCLUDE_SCOTTI_CANDIDATE=1 explicitly opts into a candidate run; results remain exploratory. Do not run CAFE5 directly from an unreviewed count matrix or interpret annotation absence as confirmed biological loss.
-No new OrthoFinder, BUSCO or functional job was submitted by this organization task. Existing secretome/MEROPS scripts and parameters were preserved.
+SprJ_4.0, GCA_053814205.1 / PRJDB8966: 29,231 genes/mRNAs, 28,993 translated
+proteins, 238 no-CDS models and no multi-mRNA genes. All translated proteins
+map to CDS IDs; no-CDS models are audited, not automatically pseudogenes.
+InterProScan completed: 26,006 proteins with member-database matches and
+18,640 with integrated InterPro entries (64.29%). eggNOG reported 21,019
+processed hits. Do not infer a new run or secretome completion from these counts.
+Recovery/mapping of the paper's reported TE-associated ID list remains separate.
+TE exclusion is an explicit analysis choice, not a mandatory OrthoFinder step.
 
-## Local verification of this organization update
+## Completed OrthoFinder baselines
 
-All 54 shell/Python scripts across scotti/post-mt and comparative-genomics passed syntax checks, including embedded Python. Small synthetic fixtures verified mixed-lineage BUSCO collection, the 46-isoform/44-gene review split, and a simulated OrthoFinder input freeze that excludes stale files while preserving previous input directories. The functional-evidence integrator was previously tested with synthetic retained/excluded query IDs. These are code checks, not reruns of biological analyses. Server source files and active jobs were not accessed or modified.
+Two separate 11-species runs used the 9,234-record filtered7 cotti baseline:
+
+- Original auto-rooted: `04_orthofinder/runs/exploratory11_scotti_filtered7_v1/input/OrthoFinder/Results_Nov09/`.
+  Final membership/count tables agree at **16,583 orthogroups / 137,611 assigned
+  proteins**. Earlier statistics reported 16,669 groups / 137,591 proteins;
+  those summary values must not replace the final membership counts.
+- Full rerun with the supplied Cyclophyllidea-rooted tree:
+  `04_orthofinder/runs/exploratory11_cyclophyllidea_rooted_full_v1/Results_Nov09/`.
+  Final membership/count tables agree at **13,937 groups / 138,538 assigned
+  proteins**, with no duplicate protein memberships. The run summary reported
+  13,975 / 138,533; membership-based figures use the final tables.
+
+These runs were not uniformly TE-filtered. Publication of the same cotti
+baseline does not automatically change their inputs or remove these analysis
+limitations. A whole-proteome without32 run is optional, not the selected
+release or a prerequisite to acknowledging the published baseline.
+
+Local historical records mark `exploratory11_scotti_without32_v1` invalid:
+cotti overwrote the staged T_multiceps file, leaving ten inputs. Script 16
+fixes staging and targets `_v2`; successful completion of that corrected
+run is not established by the outputs supplied here. Keep the invalid run
+out of phylogenetic/family interpretations.
+
+## Independent phylogeny and figure boundary
+
+`08_phylogeny/singlecopy374_v1` contains **373**, not 374, strict single-copy
+loci selected from the final membership table and matched to the corresponding
+alignments. The cached 374-group list/single-copy sequences are inconsistent
+with those final group IDs and must not be mixed with them. The supermatrix
+has 190,437 amino-acid sites and 11 species.
+
+IQ-TREE support values are SH-aLRT/UFBoot percentages, not OrthoFinder node
+support. The short deep edge has gCF 38.61% and sCF 31.89% despite 100/100
+support. Gene-tree resolutions: 144/373 Sparganum/Spirometra basal, 68/373
+Schistocephalus basal, 129/373 D. latus/Ligula basal, 32 other discordances.
+The cotti/solidus pair is stable (gCF 86.06%, sCF 92.20%). Rooting between
+the sampled orders is an explicit outgroup choice.
+
+Do not transfer internal duplication counts from the OrthoFinder topology
+onto the different IQ-TREE topology. Terminal duplication summaries may be
+shown separately with their source stated. The historical plot script 11
+reproduces the earlier auto-rooted figure; changing release labels does not
+recompute its embedded values or fix its historical topology.
+
+## Configuration and next use
+
+The default SPECIES array remains the ten backgrounds to preserve existing
+functional/secretome/MEROPS jobs. S_cotti is released, not pending; script 03
+can explicitly include the shared release with `INCLUDE_SCOTTI_RELEASE=1`.
+Historical candidate mode remains available for reproducing earlier input
+freezes. The two modes are mutually exclusive. No standardized links or
+server configurations were changed by this local update.
+
+Uniform family-count interpretation still requires auditing extreme/TE-related
+families and annotation completeness. CAFE5 and molecular-evolution analyses
+need analysis-specific validated inputs. Existing secretome/MEROPS scripts
+and computational parameters are preserved.

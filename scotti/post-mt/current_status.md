@@ -1,8 +1,11 @@
 # Current annotation status
 
-Updated from user-supplied server output through the 2026-11-09 TE review and
-exploratory comparative analysis. Server log dates are preserved as reported.
-Local organization does not rerun server analyses.
+Updated through the confirmed shared publication on 20 November 2026.
+The selected v1.0 baseline is released; historical stages below retain their
+original counts and source paths. Local organization does not rerun server analyses.
+
+See [the release record](../release_v1.0.md) for authoritative shared files and
+[the ncRNA/publication record](ncrna_and_release.md) for subsequent steps.
 
 ## Completed repeats
 
@@ -111,7 +114,8 @@ proteins unchanged. Its evidence was incorporated into the filtered7 review.
 ## Filtered7 and TE review
 
 `Scotti_filtered7_v1` contains 9,234 genes/primary proteins and 11,464
-isoforms. It is a candidate comparative input, not a frozen release. The
+isoforms. This unchanged baseline was selected for the v1.0 scientific release;
+the source directory retains its historical candidate naming. The
 non-destructive TE screen identified 100 primary functional candidates and did
 not remove any model. Review tiers were: 8,975 no screening signal, 126 repeat
 context only, 33 generic-domain review, 70 functional-candidate review, 29
@@ -130,20 +134,34 @@ unchanged.
 The optional sensitivity FASTA contains 9,202 primary proteins after omitting
 the 32 strong candidates. Its metazoa_odb12 result is identical to filtered7:
 C:73.5%[S:72.5%,D:1.0%],F:9.8%,M:16.7%,n:672 (494 complete, 66 fragmented,
-112 missing). This demonstrates no BUSCO loss at the reported precision but
-does not certify the set as a final non-TE annotation.
+112 missing). The later working-snapshot check confirmed zero changes among
+all 672 per-group BUSCO statuses. This does not certify a complete non-TE set;
+the user selected the 9,234-protein baseline for release.
 
-## Current next steps
+## Shared release completed
 
-Run a paired eleven-species OrthoFinder sensitivity analysis with the 9,202
-protein set while preserving the earlier 9,234-protein run. Compare orthogroup
-membership, strict single-copy loci, duplication counts, topology, and focal
-family counts. Resolve unsupported short models, potential long-gene fusions,
-and the 47 unresolved TE cases before deciding whether to freeze a final
-primary proteome. Only then replace the exploratory input and rerun the formal
-orthology and phylogeny workflow.
-The 70 BUSCO candidate groups remain a separate review set, not automatically
-rescued gene models. See candidate_review.md.
+On 20 November 2026 the shared publisher reported PASS for source/copied
+checksums, all three GFF3 validations and shared-group permissions:
+`/work/shared/Scotti_release_v1.0_preNCBI_20261118`.
+
+The release retains 9,234 genes, 11,464 isoforms and 9,234 representatives.
+The 32 strong TE-associated candidate genes and 47 unresolved TE cases remain
+retained. The 9,202-record sensitivity set is preserved only in provenance.
+The nuclear ncRNA candidate component has 3,681 loci; no repeat-context
+screening removed a candidate. Original sources and comparative inputs were
+not changed. The nuclear FASTA checksum is recorded in the release document.
+
+## Subsequent comparative use and optional review
+
+Use the released 9,234 representatives for future baseline input freezes.
+Existing runs do not require repetition solely because identical proteins
+were published; compare their frozen input with the release by checksum.
+The without32 comparison remains optional and is not a release prerequisite.
+The 70 BUSCO candidate groups, remaining short/long models and unresolved TE
+cases remain available for a future version rather than automatic gene rescue
+or deletion. See candidate_review.md.
+
+## Historical sensitivity-launch issue
 
 The initial sensitivity run directory ending in `without32_v1` is invalid:
 cotti overwrote the staged `T_multiceps.faa` because of a shell local-variable

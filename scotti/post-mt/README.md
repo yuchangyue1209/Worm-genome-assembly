@@ -1,6 +1,10 @@
 # cotti workflow after mitochondrial assembly
 
-Organized on 2026-10-28. Assembly root: `/work/cyu/assembly/worm/scotti`. Annotation root: `/work/cyu/annotation/scotti-annotation`.
+Organized from 2026-10-28; release status synchronized on 2026-11-20.
+**The selected 9,234-gene / 11,464-isoform baseline is now published.** See
+[release v1.0](../release_v1.0.md) and [ncRNA/publication details](ncrna_and_release.md).
+
+Assembly root: `/work/cyu/assembly/worm/scotti`. Annotation root: `/work/cyu/annotation/scotti-annotation`.
 
 These scripts were organized from commands and results supplied in the conversation. Steps without complete original commands are reconstructions, not copies of the original server scripts. No server analysis was rerun during this update.
 Do not execute every numbered script in sequence: the directory includes completed experiments as well as the selected annotation workflow.
@@ -96,8 +100,8 @@ All scripts and comments are English. These reconstruct commands/results already
 |22_candidate_region_mapping.sh|Completed base-level mapping of previously extracted candidate regions; -c is essential|
 |23_swissprot_diamond.sh|Completed all-isoform search using the solidus Swiss-Prot database|
 |24_protein_support_audit.py|Completed short/long/X support audit; requires a new --out|
-|25_eggnog_mapper.sh|Corrected installed CLI uses -i/-m; successful run not yet reported|
-|26_interproscan_pending.sh|Guarded template only; no execution reported|
+|25_eggnog_mapper.sh|Completed original search; corrected installed CLI uses -i/-m; retained-ID evidence is integrated|
+|26_interproscan_pending.sh|Historical template; the original 11,471-protein search completed and retained-ID evidence is integrated|
 |32_build_scotti_te_review.py|Builds a non-destructive TE evidence table from RepeatMasker context and functional evidence|
 |33_verify_scotti_te_review_fixture.py|Synthetic regression test for interval arithmetic and review-tier classification|
 |34_review_scotti_te_first30.py|Creates the documented first-30 manual-review packet and decision summaries|
@@ -125,3 +129,23 @@ and 47 as unresolved and retained. Script 36 can create a reversible
 not a final non-TE annotation and does not modify the GFF3, CDS, genome, or
 source protein files. Protein BUSCO odb12 is unchanged after exclusion:
 C:73.5%[S:72.5%,D:1.0%],F:9.8%,M:16.7%,n:672.
+
+## ncRNA, snapshot and publication scripts
+
+These are the later scripts actually supplied for the successful server work,
+including the corrected mitochondrial locus count and verified `--resume`.
+Helper modules retain their original basenames so Python imports remain valid.
+
+| Directory / entry point | Recorded outcome |
+|---|---|
+| `scripts/ncrna/build_scotti_trna_candidate.py` | 344 corrected high-confidence precursor tRNA loci |
+| `scripts/ncrna/build_scotti_ncrna_candidate.py` | 3,337 Rfam candidates plus the 344 tRNA loci; GFF3 passed |
+| `scripts/ncrna/audit_scotti_ncrna_repeat_context.py` | All 3,681 retained; TE/Small-RNA/other context separated |
+| `scripts/release/freeze_scotti_working_snapshot.py` | 63 files frozen and checked; baseline 9,234 / sensitivity 9,202; zero BUSCO group-status changes |
+| `scripts/release/publish_scotti_shared_release.py` | Published v1.0 baseline to `/work/shared`; source files preserved |
+| `scripts/ncrna/verify_*_fixture.py`, `scripts/release/verify_*_fixture.py` | Local synthetic checks, not new biological analyses |
+
+The shared package was published successfully on 20 November 2026. The
+9,202-record sensitivity set is provenance only. Do not rerun completed
+builders against their existing directories. See the record for source paths,
+the `--breakdown` tRNA correction and mitochondrial `gene`/`ncRNA_gene` check.

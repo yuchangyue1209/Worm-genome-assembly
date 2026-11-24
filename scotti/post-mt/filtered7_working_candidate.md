@@ -1,6 +1,9 @@
-# Validated filtered7 working candidate
+# Historical filtered7 source of the selected v1.0 release
 
-Status recorded 2026-11-05 from user-supplied server output. These are reported results, not locally rerun analyses.
+Original candidate-stage record: 5 November 2026. This exact baseline was later
+selected for the scientific v1.0 release, published on 20 November 2026.
+See [the release record](../release_v1.0.md) for authoritative shared paths.
+The historical source directory and its status labels are preserved.
 
 ## Paths and identifiers
 
@@ -51,7 +54,19 @@ InterProScan 5.78-109.0 completed with `100% done` from approximately 16:20 to 1
 
 642 representative proteins lack hits across these resources and are retained. Hits/annotation rows do not establish validated functions. Member signatures may be nonspecific. No automatic product names were assigned and the GFF3 remains structural.
 
-## Comparison boundary
+## Release and comparison boundary
 
-This package may be staged in a separate candidate input set for exploratory OrthoFinder. It must not silently replace a final standardized species input. Primary versus all-isoform search coverage is reported separately. Functional outputs can be reused through ID mapping; no repeat searches are needed just to select primary proteins.
-Before final family-count/gain-loss analyses: review TE-related proteins uniformly, assess remaining short/long/X models, reconcile important candidate loci, and freeze comparable species inputs. cotti ncRNA annotation and functional product-name integration remain pending. No finalized loss/expansion conclusions follow from this candidate.
+The selected scientific release retains all 9,234 representative proteins and
+11,464 isoforms from this source. TE case review created a separate
+9,202-record sensitivity set, but the user did not select it as the release.
+The later snapshot verified matching baseline/without32 statuses for every
+BUSCO group. Source/copy checksums and three shared GFF3 checks passed at
+publication; use the shared package's top-level SHA256SUMS rather than an
+older candidate checksum manifest that predates the header repair.
+
+Nuclear ncRNA annotation is now available as a separate 3,681-locus candidate
+component. Functional evidence is integrated; curated product-name assignment
+and accessioned NCBI submission remain separate from this scientific release.
+Existing comparative input files and results were not replaced. Cross-species
+annotation completeness, TE-associated families and important candidate loci
+still require consideration in interpreting gene-family changes.

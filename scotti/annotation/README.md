@@ -9,34 +9,37 @@ completed *S. solidus* workflow and from downstream comparative genomics.
 /work/cyu/annotation/scotti-annotation
 ```
 
-The current BRAKER3 ETP candidate is:
+## Released baseline (20 November 2026)
 
-```text
-results/braker3_etp_v1_retry2/
-  braker.gtf
-  braker.aa
-  braker.codingseq
-```
+The selected release is `/work/shared/Scotti_release_v1.0_preNCBI_20261118`:
+9,234 genes, 11,464 protein isoforms and 9,234 longest representatives. See
+[the authoritative release record](../release_v1.0.md).
 
-The candidate contains 11,471 protein predictions. It is not yet the final
-primary proteome: structural and functional evidence must be integrated,
-unsupported models reviewed, representative isoforms selected, identifiers
-audited and a versioned release built.
+Swiss-Prot, eggNOG and InterProScan have completed and their evidence is
+integrated for retained IDs. The shared package includes the nuclear genome,
+separate protein-coding and ncRNA GFF3 files, CDS and protein FASTAs,
+mitochondrial working package, TE-review records and checksums. All three
+shared GFF3 files passed validation. The complete baseline retains the
+32 strong TE candidates and 47 unresolved cases; the 9,202-record exclusion
+set is an optional sensitivity input only.
 
-## Current status (5 November 2026)
+The 3,681 nuclear ncRNA loci remain candidates (344 tRNA + 3,337 Rfam).
+Functional evidence is separate from curated product-name assignment. No
+combined nuclear GFF3, release GTF or accessioned NCBI submission was generated.
 
-- Nuclear assembly and repeat masking are complete.
-- RepeatMasker reports 69.93% interspersed repeats; this is annotation context,
-  not a reason to discard genes by GFF keyword matching.
-- BRAKER3 ETP produced the current 11,471-protein candidate set.
-- A longest-isoform set containing 9,241 proteins has been generated. Protein
-  BUSCO is complete with both lineage datasets: odb10 C=68.8% and odb12
-  C=73.5%.
-- Swiss-Prot search is complete.
-- eggNOG-mapper is complete (`Total hits processed: 9225`).
-- InterProScan was started successfully on all 11,471 sanitized proteins.
-- Final evidence integration, model review, primary-isoform selection, release
-  QC and publication of the release files are pending.
+## Historical search helpers
+
+The scripts in this module retain the original BRAKER input paths and
+`EXPECTED_PROTEINS=11471`, because the completed Swiss-Prot/eggNOG/InterPro
+searches used all original isoforms. These are historical search parameters,
+not the current release counts. Do not change them to 11,464 and overwrite
+existing search prefixes merely to subset the retained proteins. Use the
+published evidence tables and ID mappings.
+
+Original BRAKER output: `results/braker3_etp_v1_retry2/` (9,241 genes,
+11,471 isoforms). The filtered7 source and historical failed/retry logs remain
+preserved. The later ncRNA/release scripts are maintained under
+[`../post-mt/scripts/`](../post-mt/README.md).
 
 ## Layout
 
@@ -69,21 +72,14 @@ bash scotti/annotation/scripts/04_functional_status.sh
 Search scripts reuse validated non-empty outputs. They do not overwrite the
 BRAKER candidate or declare it to be a final release.
 
-## Required completion order
+## Subsequent use
 
-1. Validate genome/GFF/GTF/CDS/protein relationships and sequence IDs.
-2. Complete Swiss-Prot, eggNOG and InterProScan evidence.
-3. Integrate functional evidence and review unsupported, very short, very long,
-   internally stopped and TE-associated models.
-4. Select one documented representative protein isoform per gene.
-5. Run genome- and protein-mode BUSCO and OMArk where available.
-6. Compare gene count, BUSCO, length distributions and annotation support with
-   the *S. solidus* release.
-7. Produce versioned genome, GFF3, CDS, all-isoform protein and primary-protein
-   files with checksums.
-8. Only after these checks, link the release into
-   `02_standardized_data/` and add `S_cotti` to final comparative analyses.
+For comparative analysis use the published 9,234-record representative FASTA,
+not all 11,464 isoforms and not the optional 9,202-record sensitivity set.
+Existing frozen runs remain unchanged; verify input checksums before reusing
+their results. New input choices belong in new run directories.
 
-The background cestode species are not reannotated here. They retain their
-public structural annotations and receive standardized QC and functional
-annotation in `comparative-genomics/`.
+The background cestode species retain their public structural annotations and
+receive standardized QC and functional annotation in `comparative-genomics/`.
+Optional future model repair or NCBI submission does not invalidate the
+documented v1.0 baseline.

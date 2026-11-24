@@ -18,7 +18,8 @@ BUSCO_LINEAGE=${BUSCO_LINEAGE:-metazoa_odb12}
 THREADS=${THREADS:-32}
 
 # Ten-species background set. Keep stable standardized inputs unchanged.
-# cotti filtered7 is staged separately for explicitly labeled exploratory runs.
+# Keep this background array stable for existing functional/secretome workflows.
+# cotti release inclusion is explicit in script 03; it does not silently alter other jobs.
 SPECIES=(
   S_solidus
   L_intestinalis
@@ -37,13 +38,16 @@ SPECIES=(
 # usable public structural annotation.
 EXCLUDED_SPECIES=(S_erinaceieuropaei_PRJEB1202)
 
-# Add to SPECIES only when curated genome, GFF3, CDS, and primary proteins are
-# released and linked into the standardized project layout.
-PENDING_SPECIES=(S_cotti)
+# cotti is released; standardized links in an existing server project remain a separate action.
+PENDING_SPECIES=()
+RELEASED_FOCAL_SPECIES=(S_solidus S_cotti)
+SCOTTI_RELEASE=${SCOTTI_RELEASE:-/work/shared/Scotti_release_v1.0_preNCBI_20261118}
+INCLUDE_SCOTTI_RELEASE=${INCLUDE_SCOTTI_RELEASE:-0}
 
 # Six-taxon core describes the biological design; it is not a command to remove outgroups.
 FOCAL_SPECIES=(S_solidus S_cotti)
 CORE_DIPHYLLOBOTHRIIDEA=(S_solidus S_cotti L_intestinalis D_latus Spirometra_Aus1 S_proliferum)
+# Historical candidate mode is retained for reproducing old input freezes.
 INCLUDE_SCOTTI_CANDIDATE=${INCLUDE_SCOTTI_CANDIDATE:-0}
 SCOTTI_CANDIDATE=${SCOTTI_CANDIDATE:-/work/cyu/annotation/scotti-annotation/results/filtered_candidates/Scotti_filtered7_v1}
 SCOTTI_CANDIDATE_STAGE=${SCOTTI_CANDIDATE_STAGE:-"${PROJECT}/02_standardized_candidates/Scotti_filtered7_v1"}

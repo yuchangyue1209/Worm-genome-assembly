@@ -1,19 +1,36 @@
 # S. cotti mitochondrial assembly and annotation
 
 Compiled on 2026-10-27 for **S. cotti / scotti_2 / PacBio HiFi**.
-The original `workflow-scripts/02_mitochondrial_assembly_annotation.sh` describes
+The original `solidus/workflow-scripts/02_mitochondrial_assembly_annotation.sh` describes
 **S. solidus / ONT** and remains unchanged.
 This directory contains reproducible workflow code and results reported in the
 analysis session. Large data files and actual analysis outputs remain on stickleback.
 Local validation covered syntax and small logic checks; assembly and annotation
 were not rerun locally.
 
-## Current status
+## Current curated component (20 November 2026)
+
+The server v2 curated GFF3 and mitochondrial working package were validated
+and copied into the selected cotti v1.0 release. The component has 15,437 bp
+and 36 genes: 12 protein-coding genes, 22 tRNAs and two rRNAs. Its GFF3 uses
+12 `gene` and 24 `ncRNA_gene` parent features. It retains curated-candidate
+status, including intentional circular virtual coordinates.
+
+Shared files are under
+`/work/shared/Scotti_release_v1.0_preNCBI_20261118/assembly/`;
+the complete source package, including `09_build_curated_candidate_v2.py`, is
+preserved in `mitochondria_working_v1/`. See [the release record](../release_v1.0.md).
+The local script 08 and proposed coordinate table are historical; the server
+v2 builder has not been recovered locally and must not be replaced with them.
+
+## Historical status before curation
 
 - The BAM-derived FASTQ passed a complete format check. The old `scotti_2.fastq` is malformed and must not be reused.
 - A single 15,437-bp circular mt candidate was assembled, with read support for the junction and repeat region.
 - MITOS2 and ARAGORN have been run. Homology supports adding rrnL and trnH and revising the cox3 boundaries.
-- **A revised GFF has not been generated, validated, or released.** `curation_candidates.tsv` records proposed changes, not final annotations.
+- At this historical stage no revised GFF had been generated. Subsequent
+  server v2 curation/validation and shared publication are documented above.
+  `curation_candidates.tsv` remains the original proposal table.
 - OH predictions are not confirmed D-loops. Do not add genomic A residues to the FASTA to complete an inferred stop codon.
 - These annotation issues do not, by themselves, justify rerunning nuclear hifiasm assembly.
 
@@ -146,19 +163,20 @@ Direct translation of the proposed cox3 sequence begins with V; if confirmed as
 the initiation codon, the protein begins with M.
 The original MITOS2 cox3 prediction has ATG/TAA, but a complete ORF alone does not
 establish correct boundaries. Published-reference homology supports the revised range.
-The proposed changes have not been written into a GFF or subjected to submission
-validation. The rrnL homology-based boundaries, tRNA boundaries, and complete
-gene set still require final review.
+This table records the earlier proposals, not the authoritative v2 coordinates.
+Subsequent curated boundaries and gene relationships are preserved in the
+server/shared v2 package. NCBI submission validation remains a separate stage.
 A revised GFF must preserve consistent gene/transcript/exon/CDS relationships,
 Parent/ID attributes, phases, and incomplete-stop annotations; changing one
 coordinate row alone is insufficient.
 
-## Remaining work
+## Historical checklist and future submission
 
-1. Record the reviewed annotation changes in a new file with provenance; preserve the original MITOS2 GFF.
-2. Review the complete gene set, reading frames, rRNAs, tRNAs, and overlaps. Do not promote every ARAGORN prediction to the final annotation.
-3. Validate feature hierarchy and coordinates before generating the final mt release.
-4. Handle SAMBA settings and nuclear assembly validation in the separate nuclear workflow. Mt annotation uncertainty alone does not imply that nuclear reassembly is needed.
+The earlier change-recording, complete-gene-set review and GFF3 checks were
+completed for the documented curated candidate and preserved with the source
+MITOS2 GFF. Further biological refinement and NCBI submission-file generation
+remain versioned future work. Handle nuclear assembly experiments separately;
+the cotti release selected the RagTag-only nuclear baseline.
 
 ## References
 

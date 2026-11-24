@@ -11,8 +11,8 @@ separate submission stage.
 
 ## Workflow scripts
 
-The single-species assembly and annotation workflow remains under
-`workflow-scripts/`. The downstream multi-species analysis is maintained
+The solidus assembly and annotation workflow remains under
+`solidus/workflow-scripts/`. The downstream multi-species analysis is maintained
 separately under [`comparative-genomics/`](comparative-genomics/README.md).
 
 | Script | Purpose |
@@ -52,10 +52,14 @@ The *S. cotti* work is maintained separately under [`scotti/`](scotti/).
   mitochondrial read extraction, assembly, read-support checks,
   MITOS2/ARAGORN and annotation-boundary evidence.
 
-The *S. cotti* annotation remains a release candidate. It must not be added to
-the final comparative-genomics run until its curated genome, GFF3, CDS and
-primary-protein files pass the release checks documented in that module. The
-original *S. solidus* scripts remain under `workflow-scripts/`.
+The *S. cotti* scientific release v1.0 was published on 20 November 2026 at
+`/work/shared/Scotti_release_v1.0_preNCBI_20261118`. Its selected baseline has
+9,234 genes, 11,464 protein isoforms and 9,234 longest representatives. All
+32 strong TE-associated candidate genes remain in this release; the 9,202-record
+exclusion set is sensitivity-analysis provenance only. See
+[the cotti release record](scotti/release_v1.0.md) for files and component status.
+Existing comparative inputs/results were not automatically replaced. The original
+*S. solidus* scripts remain under `solidus/workflow-scripts/`.
 
 ## Final nuclear assembly
 
