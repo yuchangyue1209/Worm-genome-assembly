@@ -1,0 +1,5 @@
+Profile	Species_order	Use
+screening8_no_lowqc_no_spro	S_solidus,S_cotti,Spirometra_Aus1,E_multilocularis,H_microstoma,E_granulosus,T_solium,T_multiceps	Current screening set; excludes D_latus and L_intestinalis for low protein BUSCO and excludes S_proliferum until TE-associated families are removed
+primary9_filtered_spro	S_solidus,S_cotti,Spirometra_Aus1,S_proliferum,E_multilocularis,H_microstoma,E_granulosus,T_solium,T_multiceps	Planned primary set after documented S_proliferum TE-family filtering
+sensitivity8_no_tmulticeps	S_solidus,S_cotti,Spirometra_Aus1,S_proliferum,E_multilocularis,H_microstoma,E_granulosus,T_solium	Robustness set after S_proliferum filtering; also omits lower-completeness T_multiceps
+descriptive11	S_solidus,S_cotti,L_intestinalis,Spirometra_Aus1,D_latus,S_proliferum,E_multilocularis,H_microstoma,E_granulosus,T_solium,T_multiceps	Descriptive comparison only; not recommended for the main gain-loss inference

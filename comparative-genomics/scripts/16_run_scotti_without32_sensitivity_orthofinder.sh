@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
-# OPTIONAL paired OrthoFinder sensitivity run; the selected release retains 9,234 proteins.
-# This is not a prerequisite for release and is not launched by the documentation update.
+# Paired OrthoFinder sensitivity run using the 9,202-protein cotti set.
 # This does not overwrite the 9,234-protein exploratory run or promote the
 # sensitivity FASTA to a final annotation release.
 set -euo pipefail
 
 ROOT=${ROOT:-/work/cyu/Schistocephalus_comparative_genomics}
 RUN=${RUN:-"${ROOT}/04_orthofinder/runs/exploratory11_scotti_without32_v2"}
-SCOTTI_RELEASE=${SCOTTI_RELEASE:-/work/shared/Scotti_release_v1.0_preNCBI_20261118}
-COTTI=${COTTI:-"${SCOTTI_RELEASE}/working_snapshot/TE_sensitivity/Scotti_primary.without32_strong_TE_candidates.sensitivity.faa"}
+COTTI=${COTTI:-/work/cyu/annotation/scotti-annotation/results/annotation_qc/08_TE_protein_review_v1/review100_v2/Scotti_primary.without32_strong_TE_candidates.sensitivity.faa}
 THREADS=${THREADS:-32}
 ANALYSIS_THREADS=${ANALYSIS_THREADS:-16}
 

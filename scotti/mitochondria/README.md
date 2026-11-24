@@ -20,8 +20,24 @@ Shared files are under
 `/work/shared/Scotti_release_v1.0_preNCBI_20261118/assembly/`;
 the complete source package, including `09_build_curated_candidate_v2.py`, is
 preserved in `mitochondria_working_v1/`. See [the release record](../release_v1.0.md).
-The local script 08 and proposed coordinate table are historical; the server
-v2 builder has not been recovered locally and must not be replaced with them.
+The local script 08 and proposed coordinate table are historical; they must
+not replace the server v2 builder.
+
+### Builder recovered locally (24 November 2026)
+
+The user copied `assembly/mitochondria_working_v1/09_build_curated_candidate_v2.py`
+from the shared release to [`scripts/09_build_curated_candidate_v2.py`](scripts/09_build_curated_candidate_v2.py).
+Local Python syntax validation passed. Its local SHA256 is
+`b0c64345d86243eaabec101affec8555ccedde9915da1bf491d1df13914cd319`;
+an independent remote checksum comparison has not yet been recorded.
+
+The builder imports only the Python standard library and Biopython; no sibling
+helper script is imported. Its default server inputs are the original
+`/work/cyu/assembly/worm/scotti/mitochondria/05_mitos2/result.gff` and
+`/work/cyu/assembly/worm/scotti/mitochondria/03_flye_hifi_random700/assembly/assembly.fasta`.
+It requires the unrotated `contig_1` sequence (15,437 bp), not a renamed release
+FASTA. The output directory must be new. Source recovery does not rerun the
+curation or establish new biological/submission validation.
 
 ## Historical status before curation
 

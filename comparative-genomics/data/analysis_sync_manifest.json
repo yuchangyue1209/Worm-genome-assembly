@@ -1,0 +1,271 @@
+{
+  "schema_version": 1,
+  "as_of_local_date": "2026-11-24",
+  "timezone": "America/Chicago",
+  "scope": "Comparative workflow source, tests, small metadata and documentation only; not server results or completion evidence",
+  "excludes": [
+    "private config.sh",
+    "Python caches",
+    "raw assemblies and proteins",
+    "analysis output directories",
+    "this self-referential manifest"
+  ],
+  "files": [
+    {
+      "path": "comparative-genomics/CURRENT_STATUS.md",
+      "sha256": "035c49a58b8ecec4f2f8aedb40ae777e11c20d0ce345e772ccc9a2ca0aa16a81"
+    },
+    {
+      "path": "comparative-genomics/README.md",
+      "sha256": "c09e9aa5f542ac7697d2cd2a8f17cf67787ba76c83272415ac2db16679cff90b"
+    },
+    {
+      "path": "comparative-genomics/config.example.sh",
+      "sha256": "0f746008b198c2cfa5f5e63d672af23750232a740f69af659305031ce97ad6bc"
+    },
+    {
+      "path": "comparative-genomics/data/cafe5_species_sets.tsv",
+      "sha256": "ee676f7841697feb38d45fd7ad575a1a53e8ce8509487440a6e72f135a0aff7e"
+    },
+    {
+      "path": "comparative-genomics/data/focal_candidate_validation.server.tsv",
+      "sha256": "fadc9e30de9c18471493581fadf780fcc28460dccbc701cccabe66a036a4d42f"
+    },
+    {
+      "path": "comparative-genomics/data/focal_species_specific_manual_review.tsv",
+      "sha256": "edda93ed18decebb91407fd5fdeb400b400bcb3fa768163a52bf1b08923b72c2"
+    },
+    {
+      "path": "comparative-genomics/data/scotti_release_baseline.tsv",
+      "sha256": "06b19d5cd8d659e355cb5c930ffdb7a51d3938e46a14c764a19c7f57e07c780e"
+    },
+    {
+      "path": "comparative-genomics/data/species_manifest.tsv",
+      "sha256": "88caf9c9821e8899cd7dbf807e6e0dd8a10f273859cbfac2ee051ae2e1098aed"
+    },
+    {
+      "path": "comparative-genomics/scripts/00_standardize_new_cyclophyllidea.sh",
+      "sha256": "fa6e41c8f5c566ef62d71c14d12c899fd8e7290d460c4d81e974cb30c4f741a6"
+    },
+    {
+      "path": "comparative-genomics/scripts/00b_standardize_s_proliferum.sh",
+      "sha256": "9fd0793846376b7c80d5f422e3c84a1894e1bf22959e5f2c0eead08655729793"
+    },
+    {
+      "path": "comparative-genomics/scripts/00c_audit_s_proliferum.py",
+      "sha256": "04c00946e27c17bcf6103545861e75051e4aebdf1dd0865802a7a3fb30dfb60b"
+    },
+    {
+      "path": "comparative-genomics/scripts/00d_stage_scotti_candidate.sh",
+      "sha256": "1fd6f9e520e785ec5f3da8740ee2e055d4bc0df22954d6b9ff0ab37653d0342a"
+    },
+    {
+      "path": "comparative-genomics/scripts/01_input_and_protein_qc.sh",
+      "sha256": "961eda54503f5421b4c6502ef9d3f9e6988a098b0012cba3e2938715f7faefb3"
+    },
+    {
+      "path": "comparative-genomics/scripts/02_busco_genomes.sh",
+      "sha256": "db9890d56e63e1c20d847db9c264f78939105259ac2b822e10287e0ee697e533"
+    },
+    {
+      "path": "comparative-genomics/scripts/02b_busco_proteins.sh",
+      "sha256": "b36c5827148da47a2b3df944ecf4a15c49baf8037fb7354dba648986c5d528da"
+    },
+    {
+      "path": "comparative-genomics/scripts/02c_busco_summary.py",
+      "sha256": "e2d9a6125f0c85c0f82c39ab7dd91e97859fef6862af391b5eef7c6a0fe13a9a"
+    },
+    {
+      "path": "comparative-genomics/scripts/02e_collect_busco_summaries.py",
+      "sha256": "7b2b850437eea60dff981a47036919a64604f774987cb799384fdc37b19c0c62"
+    },
+    {
+      "path": "comparative-genomics/scripts/03_orthofinder.sh",
+      "sha256": "dfa5d7c2e048adcc3829e970c38fc1bd555a8b3c3e05e0048ca12da35d310994"
+    },
+    {
+      "path": "comparative-genomics/scripts/04_interproscan.sh",
+      "sha256": "beaa7264eb85bcdb94d13dc5b371b7807086dbb651b0755e16954850241bcc3e"
+    },
+    {
+      "path": "comparative-genomics/scripts/05_eggnog_mapper.sh",
+      "sha256": "ab59079398d9b8a2d9b1fe4e4f9fe8cb0da7269a02960fe3b3d9e614c0fb1d35"
+    },
+    {
+      "path": "comparative-genomics/scripts/06_functional_coverage.sh",
+      "sha256": "28f205bfdd303ba4892c31c8b07a990e12f18c6e52944feb62f66b35e0e4fea2"
+    },
+    {
+      "path": "comparative-genomics/scripts/07_extreme_family_qc.py",
+      "sha256": "c66ea70622bc6dac31ed9b975108a7dc623b1f408018b2fd2f95b8f39b91a959"
+    },
+    {
+      "path": "comparative-genomics/scripts/08_deeptmhmm2.sh",
+      "sha256": "76d610ff68b227c3ab738ae478cbe9f3127ff8d8ea7b9998c7665c5294d2d97c"
+    },
+    {
+      "path": "comparative-genomics/scripts/09_integrate_secretome.py",
+      "sha256": "900c59e36d1741673dd3262fe4e82fee7518c462d9c10d4ed34d2eace5d5162d"
+    },
+    {
+      "path": "comparative-genomics/scripts/09_integrate_secretome.sh",
+      "sha256": "e4d225fa8413fba9ef6f8279c86511f79613cc61a3cf4998e5faa4fbd73013aa"
+    },
+    {
+      "path": "comparative-genomics/scripts/10_merops.sh",
+      "sha256": "c08408f60d78c063967c4101f114f4083e0eda9b7472d7d4f158f94f4550183b"
+    },
+    {
+      "path": "comparative-genomics/scripts/10_parse_merops.py",
+      "sha256": "9467ba0aa95272231db8849b47383b3f6e9958565374ee35312084607ae5da68"
+    },
+    {
+      "path": "comparative-genomics/scripts/11_plot_panel_a_exploratory.py",
+      "sha256": "c59aae501059486b4fbb6c7942404718bf3d6da320feefd6da1ac0787e2fc237"
+    },
+    {
+      "path": "comparative-genomics/scripts/12_plot_iqtree_concordance.py",
+      "sha256": "77a592635eb3a6275f4cdfc3e32517bd94d1a69ee21519c43be94672b6f90c49"
+    },
+    {
+      "path": "comparative-genomics/scripts/13_prepare_singlecopy_phylogeny.py",
+      "sha256": "405e859864ac5c6d520bf20cbd2fd112503f65e171c38a236edb01cc5295ae58"
+    },
+    {
+      "path": "comparative-genomics/scripts/14_run_iqtree_concordance.sh",
+      "sha256": "672bd0a055e9f8c827a2e2f143d43da5e88c9a4524589977ee9ae45455cd702e"
+    },
+    {
+      "path": "comparative-genomics/scripts/15_summarize_deep_topology_support.py",
+      "sha256": "77354db4296cfc2f26395a40e8cead5f429262429d34d5d56501eb67a55f7c47"
+    },
+    {
+      "path": "comparative-genomics/scripts/16_run_scotti_without32_sensitivity_orthofinder.sh",
+      "sha256": "7a20f844987ec4e8248d6cf647cb8caca0f19b0a3c0e499ae1c7b0354c372d9d"
+    },
+    {
+      "path": "comparative-genomics/scripts/17_plot_orthology_summary_clean.py",
+      "sha256": "ed38578c6b51f694f95f916f818ca2da98bc8e08689d32cb4d0cf896457449a1"
+    },
+    {
+      "path": "comparative-genomics/scripts/18_plot_gene_sharing_tree_bars.py",
+      "sha256": "ae4a51af2df00a56cda1b26926f00ecd90999c344ca3338b56da5d712cc72a24"
+    },
+    {
+      "path": "comparative-genomics/scripts/19_extract_focal_species_specific.py",
+      "sha256": "577ef574067002caf52baa3d37652285bafe689240c9ba13616c222498ec5ba2"
+    },
+    {
+      "path": "comparative-genomics/scripts/20_run_focal_reciprocal_searches.sh",
+      "sha256": "451633593f2d2a0dc0143e2b445af1dad3d1b8780438e8f38501eca76ed041f6"
+    },
+    {
+      "path": "comparative-genomics/scripts/21_summarize_focal_species_specific.py",
+      "sha256": "57b836447e43a9610a172ce15018a0c5d7216ce4d218ee3be2d45cafe7e7cef7"
+    },
+    {
+      "path": "comparative-genomics/scripts/22_validate_priority_candidates.py",
+      "sha256": "df8d319b12ade0b6ff44e71458c24ee2c4d88b47c199994ef10a9a4de1828ba7"
+    },
+    {
+      "path": "comparative-genomics/scripts/23_verify_scotti_release_baseline.sh",
+      "sha256": "a60b928179d39c5f2a85129b2fe40a7a27556946bda940239b8bc6c8ef250a14"
+    },
+    {
+      "path": "comparative-genomics/scripts/24_prepare_cafe5_input.py",
+      "sha256": "7b8d891f97c7d3588673abd991725dbfa5848310064b40d39673595a2a080de5"
+    },
+    {
+      "path": "comparative-genomics/scripts/25_validate_cafe5_tree.py",
+      "sha256": "4cbd3da021cddaa8683a40ec4b21afe43374c4e26fd3694383cc2898d25d94df"
+    },
+    {
+      "path": "comparative-genomics/scripts/26_run_cafe5.sh",
+      "sha256": "ccf2d4ef3f55f2a5c9a0fa3510e079695ac44811080f6fd610c7eb707e4bc422"
+    },
+    {
+      "path": "comparative-genomics/scripts/27_map_flagged_proteins_to_orthogroups.py",
+      "sha256": "5ace93780fcbfd9eab282782b77db6e6bf03370dd40b2fb64a315e4d66c64a63"
+    },
+    {
+      "path": "comparative-genomics/scripts/28_make_cafe5_timetrees.R",
+      "sha256": "43a7c5dbac57ea96ea3d6bc4510c12f3cce98e479f77ce72532f0eb370b3d9d1"
+    },
+    {
+      "path": "comparative-genomics/scripts/29_summarize_cafe5.py",
+      "sha256": "89c1b6244a0e908fedbaa4f70b797aca76a2d4b98b38518f06ed82f6f2bfca2a"
+    },
+    {
+      "path": "comparative-genomics/scripts/30_collect_release_table1.py",
+      "sha256": "b108ea9eb1745179c40d187684ad6f66debca52d9eee36d8ddeed83c250ed0e2"
+    },
+    {
+      "path": "comparative-genomics/scripts/31_review_cafe_priority_families.py",
+      "sha256": "e318bf3d06308e293cebf2edcdde26a93c3f31e5fc09df1edde8ab8385a1e2e1"
+    },
+    {
+      "path": "comparative-genomics/scripts/32_plot_cafe5_tree_pies.py",
+      "sha256": "085647544d9f2bc1f149e29016f63ae755885e11eb3106b12b1d857ec37e5614"
+    },
+    {
+      "path": "comparative-genomics/scripts/35_audit_d_latus_exons_readonly_v1.py",
+      "sha256": "4bfe27f9ac4021a920aa63e4819bfabf5848213bfea782333ea475c13a2cf80f"
+    },
+    {
+      "path": "comparative-genomics/scripts/36_audit_comparative_outputs_readonly.py",
+      "sha256": "2062b589fbb486a40b2bed25a21bf888e8697522a273e88d0bba7823129e05a8"
+    },
+    {
+      "path": "comparative-genomics/scripts/audit_final_busco_inputs.py",
+      "sha256": "654090665c139e6e50fef78988cc66cbae7b7d6d8750dd29d7f9db7117e0da14"
+    },
+    {
+      "path": "comparative-genomics/scripts/common.sh",
+      "sha256": "a2fb2fd29f14408cd3c873f898fe9e1c8ce745d4fdc46532385bb8e3074312a2"
+    },
+    {
+      "path": "comparative-genomics/scripts/interpro_verified_run.py",
+      "sha256": "0095eba189371d448b952511594d467f45c6e1ed1a87eb7fc3474f410fac550f"
+    },
+    {
+      "path": "comparative-genomics/scripts/run_missing_genome_busco.py",
+      "sha256": "a6b7a167e2f58601f0bf432df175540083f253735a4cb675affd8bf411f9b41e"
+    },
+    {
+      "path": "comparative-genomics/scripts/test_17_plot_orthology_summary_clean.py",
+      "sha256": "40460d3d522d004a02704f2cca58e8dc5afd47086a08ccbf3295a112e3372ba2"
+    },
+    {
+      "path": "comparative-genomics/scripts/test_29_summarize_cafe5.py",
+      "sha256": "cb2f1c87395a6dd36d195fe3ca98e4bb11ed83d54fd3b406838adbef0b05ca9a"
+    },
+    {
+      "path": "comparative-genomics/scripts/test_30_collect_release_table1.py",
+      "sha256": "1c98f6dab8f0aa9ab76cefba6a664e2859530a4d99bc674bac87728a2b0f6ce1"
+    },
+    {
+      "path": "comparative-genomics/scripts/test_31_review_cafe_priority_families.py",
+      "sha256": "7c8ae564817494cd058b20d086eab8d9d0dbda55b881882a5e55e4a9d91e5df0"
+    },
+    {
+      "path": "comparative-genomics/scripts/test_32_plot_cafe5_tree_pies.py",
+      "sha256": "ae8387c7bc144275e3d938b0a08b0f6f1b9ac015cedf18184f2ecea3d060bf38"
+    },
+    {
+      "path": "comparative-genomics/scripts/test_36_audit_comparative_outputs_readonly.py",
+      "sha256": "0c00fd21e60f738ec2cbc460ea9c66f3d98e9d2df1fb330f98cd6c88e26d6820"
+    },
+    {
+      "path": "comparative-genomics/scripts/test_entrypoint_safety.py",
+      "sha256": "e61a0e659a690181d9177ec1946d967396e92b1e9605fc0f1a77ee61d2667210"
+    },
+    {
+      "path": "comparative-genomics/scripts/test_manuscript_entrypoints.py",
+      "sha256": "237bcbad748c3b60197f0d1acc7693bd6c9d948683aad1328e09420222beb06c"
+    },
+    {
+      "path": "comparative-genomics/scripts/verify_missing_genome_runner.py",
+      "sha256": "2972f3adb861ddc4673582330cc2105cbae307456b65ce46f823c820f96a08e6"
+    }
+  ]
+}

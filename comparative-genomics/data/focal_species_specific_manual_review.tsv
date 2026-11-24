@@ -1,0 +1,9 @@
+Species	Orthogroup	Proteins	Classification	Use_for_RNA_repeat_validation	Interpretation
+S_cotti	OG0012688	3	Low_confidence	0	All proteins are 49 aa and lack recognizable domains
+S_cotti	OG0015688	2	Reject_as_species_specific_candidate	0	All proteins are only 18 aa and lack recognizable domains
+S_cotti	OG0015711	2	Plausible_candidate	1	138-226 aa proteins; validate RNA and repeat association
+S_solidus	OG0002484	5	Shared_family_expansion	0	Fibronectin type III-containing family with other members homologous to S_cotti
+S_solidus	OG0016342	2	Unresolved_candidate	1	No recognizable domains
+S_solidus	OG0012892	3	Unresolved_candidate	1	Three similarly sized proteins; test expression and local duplication
+S_solidus	OG0016337	2	Unresolved_candidate	1	Disordered proteins; test RNA and repeat overlap
+S_solidus	OG0009067	6	Unresolved_candidate	1	Disordered or coiled proteins; test RNA and repeat overlap

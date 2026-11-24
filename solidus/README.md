@@ -44,6 +44,23 @@ separately under [`comparative-genomics/`](../comparative-genomics/README.md).
 | `18_merge_functional_ncrna_release.sh` | Merge protein-coding and ncRNA GFF3 and sanitize structural fields |
 | `19_validate_final_release.sh` | Perform final coordinate, sequence-ID, feature-count, and checksum validation |
 | `20_publish_shared_release.sh` | Build the versioned shared pre-NCBI scientific release package |
+| `21_tagseq_3prime_refinement.sh` | Reconstruct strand-aware TagSeq poly(A)-site detection and transcript 3-prime refinement without changing CDS |
+
+### Local source recovery (24 November 2026)
+
+Recovered script 21 and the missing Rfam model-count check and conservative
+Rfam filtering steps in scripts 12–13 from the existing local workflow copy.
+These are historical workflow sources, not evidence of a new analysis run.
+Script 13 still requires the existing comprehensive Rfam GFF3 with repeat-overlap
+attributes; it does not generate that upstream file from raw cmscan output.
+Run these workflows only on the server after checking their configured inputs
+and outputs; do not rerun completed annotation solely because code was restored.
+
+The recovered TagSeq script was subsequently hardened to retain candidates
+when an exclusion list is empty, require GNU awk, and refuse existing final
+GTF outputs. The original mapping/filtering thresholds and flag mask (2308)
+are unchanged. These source-level corrections do not establish that historical
+release results were affected; no release annotation was regenerated.
 
 Expensive primary searches are opt-in and should not be repeated unless their
 input sequence or database version changes.

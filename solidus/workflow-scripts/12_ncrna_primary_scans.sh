@@ -10,6 +10,8 @@ RRNA=${ROOT}/rrna
 RFAM=${ROOT}/rfam_genome
 DB=/work/cyu/databases/rfam
 THREADS=${THREADS:-32}
+RFAM_RELEASE=15.1
+RFAM_EXPECTED_MODELS=4227
 mkdir -p "${TRNA}" "${RRNA}" "${RFAM}"
 
 [[ -s "${ASM}" ]] || { echo "ERROR: missing ${ASM}" >&2; exit 1; }
@@ -42,6 +44,14 @@ if [[ "${RUN_RFAM:-0}" == 1 ]]; then
     for file in "${DB}/Rfam.cm" "${DB}/Rfam.clanin"; do
         [[ -s "${file}" ]] || { echo "ERROR: missing ${file}" >&2; exit 1; }
     done
+    # Rfam 15.1 contains 4,227 unique covariance-model accessions. ACC occurs
+    # twice per model in this Rfam.cm, so count unique accessions rather than
+    # raw ACC lines.
+    rfam_models=$(awk '$1=="ACC"{seen[$2]=1}END{print length(seen)}' "${DB}/Rfam.cm")
+    [[ "${rfam_models}" -eq "${RFAM_EXPECTED_MODELS}" ]] || {
+        echo "ERROR: expected Rfam ${RFAM_RELEASE} (${RFAM_EXPECTED_MODELS} models), found ${rfam_models}" >&2
+        exit 1
+    }
     /usr/bin/time -v cmscan \
         --cpu "${THREADS}" \
         --cut_ga \

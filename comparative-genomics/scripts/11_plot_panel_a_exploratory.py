@@ -53,7 +53,14 @@ def main():
     here=Path(__file__).resolve().parent
     p.add_argument('--source',type=Path,default=here/'source')
     p.add_argument('--out',type=Path,default=here/'figure')
+    p.add_argument('--minimal',action='store_true',
+                   help='Draw only the four data panels; omit overall title, subtitles, legend, notes and caption file')
+    p.add_argument('--font-scale',type=float,default=1.0,
+                   help='Multiply all plotted font sizes (recommended clean figure: 1.25)')
     a=p.parse_args();src=a.source;out=a.out;out.mkdir(parents=True,exist_ok=True)
+    if a.font_scale <= 0:
+        raise ValueError('--font-scale must be greater than zero')
+    fs=lambda size:size*a.font_scale
     paths={
       'tree':src/'Species_Tree/SpeciesTree_rooted_node_labels.txt',
       'support_tree':src/'Species_Tree/SpeciesTree_rooted.txt',
@@ -148,9 +155,11 @@ def main():
         w=csv.writer(f,delimiter='\t');w.writerow(['node','descendant_species','duplications_all','duplications_support_ge_0.5','exported_tree_support'])
         for n in walk(tree):
             if n.children:w.writerow([n.name,','.join(leaves(n)),dups_all[n.name],dups[n.name],supports[clade_key(n)]])
-    plt.rcParams.update({'font.family':'DejaVu Sans','font.size':10,'svg.fonttype':'none','pdf.fonttype':42,'axes.linewidth':.65})
-    fig=plt.figure(figsize=(17.8,7.7),facecolor='white')
-    gs=fig.add_gridspec(1,5,width_ratios=[5.25,.15,2.6,2.85,2.55],left=.035,right=.975,bottom=.205,top=.78,wspace=.19)
+    plt.rcParams.update({'font.family':'DejaVu Sans','font.size':fs(10),'svg.fonttype':'none','pdf.fonttype':42,'axes.linewidth':.65})
+    fig=plt.figure(figsize=(18.8,7.2 if a.minimal else 7.7),facecolor='white')
+    bottom=.105 if a.minimal else .205
+    top=.855 if a.minimal else .78
+    gs=fig.add_gridspec(1,5,width_ratios=[5.25,.15,2.6,2.85,2.75],left=.025,right=.985,bottom=bottom,top=top,wspace=.20)
     tree_ax=fig.add_subplot(gs[0]);strip=fig.add_subplot(gs[1]);axes=[fig.add_subplot(gs[i]) for i in (2,3,4)]
     all_axes=[tree_ax,strip,*axes]
     for ax in all_axes:
@@ -164,15 +173,16 @@ def main():
             for c in n.children:tree_ax.plot([xx[n],xx[c]],[yy[c],yy[c]],color='#42464b',lw=1.15,zorder=2)
             support=supports[clade_key(n)]
             label=f'{dups[n.name]:,}' + (f' ({float(support):g})' if support else '')
-            tree_ax.text(xx[n]-.05,yy[n]-.19,label,ha='right',va='bottom',fontsize=8.1,color='#4c5056',bbox=dict(facecolor='white',edgecolor='none',pad=.25),zorder=4)
+            tree_ax.text(xx[n]-.05,yy[n]-.19,label,ha='right',va='bottom',fontsize=fs(8.8),color='#4c5056',bbox=dict(facecolor='white',edgecolor='none',pad=.25),zorder=4)
         else:
-            tree_ax.text(H+.18,yy[n],names[n.name],va='center',fontsize=11.2,fontstyle='italic',fontweight='bold' if n.name in {'S_solidus','S_cotti'} else 'normal',color=colors[n.name])
+            tree_ax.text(H+.18,yy[n],names[n.name],va='center',fontsize=fs(12.2),fontstyle='italic',fontweight='bold' if n.name in {'S_solidus','S_cotti'} else 'normal',color=colors[n.name])
     tree_ax.set_xlim(-1.05,H+4.05);tree_ax.axis('off')
-    tree_ax.text(0,1.13,'Species tree',transform=tree_ax.transAxes,fontsize=13,fontweight='bold')
-    tree_ax.text(0,1.065,'Internal duplications (exported tree support)',transform=tree_ax.transAxes,fontsize=9.2,color='#62676c')
+    tree_ax.text(0,1.08 if a.minimal else 1.13,'Species phylogeny',transform=tree_ax.transAxes,fontsize=fs(14.2),fontweight='bold')
+    if not a.minimal:
+        tree_ax.text(0,1.065,'Internal duplications (exported tree support)',transform=tree_ax.transAxes,fontsize=fs(9.2),color='#62676c')
     strip.set_xlim(0,1);strip.axis('off')
     for sp in order:strip.add_patch(Rectangle((0,y[sp]-.43),1,.86,color=colors[sp] if sp not in {'S_solidus','S_cotti'} else '#865277',lw=0))
-    headings=['Terminal duplications','Genes in orthogroups','Species-specific orthogroups']
+    headings=['Terminal gene\nduplications','Proteins in\northogroups','Species-specific\northogroups']
     subtitles=['Events; support ≥0.5','Bar = assigned %; label = gene count','Groups represented in one species only']
     values=[[dups[sp] for sp in order],[metrics['Percentage of genes in orthogroups'][sp] for sp in order],[unique_og[sp] for sp in order]]
     xmax=[14200,128,1830];ticks=[[0,5000,10000],[0,25,50,75,100],[0,500,1000,1500]]
@@ -181,27 +191,31 @@ def main():
         ax.barh(range(len(order)),vals,height=.68,color=[colors[sp] for sp in order],edgecolor='none',zorder=3)
         ax.set_xlim(0,xmax[j]);ax.set_xticks(ticks[j]);ax.set_yticks([]);ax.xaxis.grid(True,color='#e8ebee',lw=.7,zorder=1);ax.set_axisbelow(True)
         for side in ['top','right','left']:ax.spines[side].set_visible(False)
-        ax.spines['bottom'].set_color('#c4c9cd');ax.tick_params(axis='x',length=3,color='#a0a7ad',labelsize=9)
+        ax.spines['bottom'].set_color('#c4c9cd');ax.tick_params(axis='x',length=3,color='#a0a7ad',labelsize=fs(9.5))
         if j!=1:ax.xaxis.set_major_formatter(FuncFormatter(lambda x,pos:f'{int(x):,}'))
-        ax.set_xlabel('Genes (%)' if j==1 else 'Number',labelpad=8,fontsize=10)
-        ax.text(0,1.13,headings[j],transform=ax.transAxes,fontsize=12.2,fontweight='bold')
-        ax.text(0,1.065,subtitles[j],transform=ax.transAxes,fontsize=8.6,color='#62676c')
+        ax.set_xlabel('Assigned proteins (%)' if j==1 else ('Events' if j==0 else 'Orthogroups'),labelpad=8,fontsize=fs(10.2))
+        ax.text(0,1.08 if a.minimal else 1.13,headings[j],transform=ax.transAxes,fontsize=fs(13.2),fontweight='bold',linespacing=1.05)
+        if not a.minimal:
+            ax.text(0,1.065,subtitles[j],transform=ax.transAxes,fontsize=fs(8.6),color='#62676c')
         for i,(sp,value) in enumerate(zip(order,vals)):
             label=f'{totals[sp]:,}' if j==1 else f'{int(value):,}'
-            ax.text(value+xmax[j]*.018,i,label,ha='left',va='center',fontsize=9.6,fontweight='bold' if sp in {'S_solidus','S_cotti'} else 'normal',color='#30343a',zorder=5)
-    fig.text(.027,.945,'a',fontsize=22,fontweight='bold')
-    fig.text(.065,.947,'Orthology and inferred gene duplications across eleven cestodes',fontsize=17,fontweight='bold',color='#26343c')
-    fig.text(.065,.905,'EXPLORATORY RUN  •  cotti filtered7 candidate  •  TE-associated proteins not uniformly filtered',fontsize=10,color='#72777d')
-    legend=[Patch(color='#258777',label='Cyclophyllidea'),Patch(color='#865277',label='Diphyllobothriidea'),Patch(color='#b65147',label='S. solidus'),Patch(color='#d4853c',label='S. cotti (candidate)')]
-    fig.legend(handles=legend,loc='lower left',bbox_to_anchor=(.06,.105),ncol=4,frameon=False,fontsize=10,handlelength=1.1,columnspacing=2.2)
-    fig.text(.065,.075,'Topology is shown as a cladogram (branch lengths not to scale); node supports are reproduced as exported, not called bootstraps.',fontsize=9,color='#656a70')
-    fig.text(.065,.047,'Order colours denote taxonomy, not monophyly. The inferred tree does not recover Diphyllobothriidea as monophyletic; topology review is required.',fontsize=9,color='#656a70')
+            ax.text(value+xmax[j]*.018,i,label,ha='left',va='center',fontsize=fs(10.2),fontweight='bold' if sp in {'S_solidus','S_cotti'} else 'normal',color='#30343a',zorder=5)
+    if not a.minimal:
+        fig.text(.027,.945,'a',fontsize=fs(22),fontweight='bold')
+        fig.text(.065,.947,'Orthology and inferred gene duplications across eleven cestodes',fontsize=fs(17),fontweight='bold',color='#26343c')
+        fig.text(.065,.905,'EXPLORATORY RUN  •  cotti filtered7 candidate  •  TE-associated proteins not uniformly filtered',fontsize=fs(10),color='#72777d')
+        legend=[Patch(color='#258777',label='Cyclophyllidea'),Patch(color='#865277',label='Diphyllobothriidea'),Patch(color='#b65147',label='S. solidus'),Patch(color='#d4853c',label='S. cotti (candidate)')]
+        fig.legend(handles=legend,loc='lower left',bbox_to_anchor=(.06,.105),ncol=4,frameon=False,fontsize=fs(10),handlelength=1.1,columnspacing=2.2)
+        fig.text(.065,.075,'Topology is shown as a cladogram (branch lengths not to scale); node supports are reproduced as exported, not called bootstraps.',fontsize=fs(9),color='#656a70')
+        fig.text(.065,.047,'Order colours denote taxonomy, not monophyly. The inferred tree does not recover Diphyllobothriidea as monophyletic; topology review is required.',fontsize=fs(9),color='#656a70')
+    output_stem='panel_A_clean' if a.minimal else 'panel_A_exploratory'
     for ext in ['pdf','svg','png']:
-        fig.savefig(out/f'panel_A_exploratory.{ext}',dpi=300,facecolor='white')
-    fig.savefig(out/'panel_A_preview.png',dpi=130,facecolor='white');plt.close(fig)
+        fig.savefig(out/f'{output_stem}.{ext}',dpi=300,facecolor='white',bbox_inches='tight' if a.minimal else None)
+    fig.savefig(out/f'{output_stem}_preview.png',dpi=130,facecolor='white',bbox_inches='tight' if a.minimal else None);plt.close(fig)
     caption='''Panel A. Exploratory orthology and gene-duplication summary for eleven cestodes. The left panel reproduces the rooted OrthoFinder topology as a cladogram; branch lengths are not represented. Internal labels give inferred duplication events with duplication support at least 0.5, followed in parentheses by tree support values exactly as exported by OrthoFinder (not interpreted as bootstrap percentages). The root has no exported support value. Terminal duplication counts use the same event-support threshold. The middle bars show the percentage of input representative proteins assigned to orthogroups; labels show assigned gene counts. The right bars show orthogroups represented in only one of the eleven input species; unassigned singleton genes are not included in this count. Colours denote taxonomic order, with the two focal species highlighted. The cotti input is the filtered7 working candidate. TE-associated proteins have not been uniformly removed, and annotation completeness differs among taxa. Accordingly, species-specific groups and duplication counts are descriptive outputs rather than validated lineage-specific innovations or family expansions. The supplied rooted tree places D. latus and L. intestinalis outside the other nine species and does not recover Diphyllobothriidea as monophyletic; this topology is retained transparently and requires independent review before final phylogenetic interpretation.\n'''
     caption += '\nData-source audit: assigned gene counts and percentages in the figure use Statistics_PerSpecies.tsv. Orthogroups.GeneCount.tsv contains 16,583 rows and 137,611 summed memberships, whereas Statistics_Overall.tsv reports 16,669 orthogroups and 137,591 assigned genes. The reason is unresolved in this exported subset; the tables must not be treated as interchangeable. Species-specific group and gene counts agree exactly between the two sources. No assumption about the reason for this discrepancy was made.\n'
-    (out/'figure_caption.txt').write_text(caption)
+    if not a.minimal:
+        (out/'figure_caption.txt').write_text(caption)
     validation=dict(species=11,input_genes=161409,genes_in_orthogroups=137591,statistics_orthogroups=statistics_og_n,gene_count_table_orthogroups=og_n,gene_count_table_memberships=sum(gene_count_totals.values()),gene_count_minus_statistics_by_species=count_deltas,single_copy_orthogroups=int(overall['Number of single-copy orthogroups']),duplication_event_threshold=0.5,duplication_counts_match_event_table=True,gene_counts_match_statistics=not any(count_deltas.values()),species_specific_counts_match_gene_count_table=True,topology_preserved=True,diphyllobothriidea_monophyletic=diphy_monophyletic,tip_order=order,matplotlib_version=matplotlib.__version__,python_version=sys.version)
     (out/'validation.json').write_text(json.dumps(validation,indent=2)+'\n')
     with (out/'input.SHA256SUMS').open('w') as f:

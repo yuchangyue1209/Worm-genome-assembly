@@ -4,15 +4,15 @@ set -euo pipefail
 source "$(dirname "$0")/common.sh"
 [[ -x "${INTERPROSCAN}" ]] || { echo "ERROR: missing ${INTERPROSCAN}" >&2; exit 1; }
 
-OUT=${FUNC}/interpro
-LOG=${FUNC}/logs/interpro
-mkdir -p "${OUT}" "${LOG}"
+OUT=${INTERPRO_OUT:-${FUNC}/interpro}
+LOG=${INTERPRO_LOG:-${FUNC}/logs/interpro}
+require_command python3
 
 for sp in "${SPECIES[@]}"; do
     protein=${STD}/proteins_primary/${sp}.faa
-    result=${OUT}/${sp}.tsv
     require_file "${protein}"
-    [[ -s "${result}" ]] && { echo "SKIP ${sp}: ${result} exists"; continue; }
-    "${INTERPROSCAN}" -i "${protein}" -b "${OUT}/${sp}" -f TSV \
-        -goterms -pa -cpu "${THREADS}" > "${LOG}/${sp}.log" 2>&1
+    python3 "${SCRIPT_DIR}/interpro_verified_run.py" \
+        --protein "${protein}" --prefix "${OUT}/${sp}" \
+        --executable "${INTERPROSCAN}" --threads "${THREADS}" \
+        --log "${LOG}/${sp}.log"
 done

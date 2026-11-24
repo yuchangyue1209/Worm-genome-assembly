@@ -1,0 +1,3 @@
+Species	GFF3	RNA_BAM	Repeat_GFF
+S_cotti	/work/cyu/annotation/scotti-annotation/results/filtered_candidates/Scotti_filtered7_v1/Scotti_nuclear.filtered7.candidate.gff3	/work/cyu/annotation/scotti-annotation/results/star/02_rna_alignment/Scotti_nuclear.rnaseq.bam	/work/cyu/assembly/worm/scotti/repeats/02_repeatmasker/Scotti_nuclear.mt_filtered.ragtag.provisional.fa.out.gff
+S_solidus	/work/cyu/annotation/ssol-annotation/results/final_filtered_release/Ssolidus_nuclear.annotation.final_candidate.gff3	/work/cyu/annotation/ssol-annotation/results/rnaseq/star_align/Aligned.sortedByCoord.out.bam	NA

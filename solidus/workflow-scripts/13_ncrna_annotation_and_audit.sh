@@ -7,6 +7,9 @@ set -euo pipefail
 ROOT=/work/cyu/annotation/ssol-annotation/results/ncrna_final
 RFAM=${ROOT}/rfam_genome
 TRNA_IN=${ROOT}/trna/complete/Ssolidus_tRNAscan.out
+RFAM_ALL=${RFAM}/Ssolidus_nuclear.rfam.comprehensive.gff3
+RRNA_NEAR=${RFAM}/Ssolidus_nuclear.rfam.near_complete_rRNA.gff3
+NONREPEAT_OTHER=${RFAM}/Ssolidus_nuclear.rfam.nonrepeat_nonrRNA.gff3
 RFGFF=${RFAM}/Ssolidus_nuclear.rfam.conservative.v2.gff3
 TRNA_DIR=${ROOT}/trna/conservative_functional
 TRNA_GFF=${TRNA_DIR}/Ssolidus_tRNA.conservative.gff3
@@ -18,10 +21,59 @@ RELEASE=${ROOT}/release
 for cmd in bedtools awk sort sha256sum; do
     command -v "${cmd}" >/dev/null || { echo "ERROR: ${cmd} not found" >&2; exit 1; }
 done
-for file in "${TRNA_IN}" "${RFGFF}" "${PCGFF}"; do
+for file in "${TRNA_IN}" "${RFAM_ALL}" "${PCGFF}"; do
     [[ -s "${file}" ]] || { echo "ERROR: missing ${file}" >&2; exit 1; }
 done
 mkdir -p "${TRNA_DIR}" "${AUDIT}" "${RELEASE}"
+
+# Construct the conservative Rfam subset. These family-specific feature-length
+# criteria exactly reproduce the original 761-feature near-complete rRNA set
+# (226 5S, 224 5.8S, 136 LSU and 175 SSU records).
+awk -F'\t' '
+BEGIN {OFS="\t"; print "##gff-version 3"}
+!/^#/ && NF>=9 && $3=="rRNA" {
+    length_bp=$5-$4+1
+    model=""
+    if(match($9,/Name=[^;]+/))
+        model=substr($9,RSTART+5,RLENGTH-5)
+
+    keep=(model=="5S_rRNA" && length_bp>=100 && length_bp<=130) ||
+         (model=="5_8S_rRNA" && length_bp>=140 && length_bp<=170) ||
+         (model=="LSU_rRNA_eukarya" && length_bp>=3000) ||
+         (model=="SSU_rRNA_eukarya" && length_bp>=1800)
+    if(keep) print
+}' "${RFAM_ALL}" > "${RRNA_NEAR}"
+
+# Retain non-rRNA candidates with <50% overlap by RepeatMasker sequence. The
+# hammerhead-ribozyme candidate was excluded from the conservative release.
+awk -F'\t' '
+BEGIN {OFS="\t"; print "##gff-version 3"}
+!/^#/ && NF>=9 && $3!="rRNA" && $3!="hammerhead_ribozyme" {
+    fraction=1
+    if(match($9,/repeat_fraction=[0-9.]+/)) {
+        value=substr($9,RSTART,RLENGTH)
+        sub(/^repeat_fraction=/,"",value)
+        fraction=value+0
+    } else if($9~/repeat_associated=false/) {
+        fraction=0
+    }
+    if(fraction<0.50) print
+}' "${RFAM_ALL}" > "${NONREPEAT_OTHER}"
+
+rrna_n=$(awk -F'\t' '$0!~/^#/&&NF>=9{n++}END{print n+0}' "${RRNA_NEAR}")
+other_n=$(awk -F'\t' '$0!~/^#/&&NF>=9{n++}END{print n+0}' "${NONREPEAT_OTHER}")
+[[ "${rrna_n}" -eq 761 ]] || { echo "ERROR: expected 761 rRNAs, found ${rrna_n}" >&2; exit 1; }
+[[ "${other_n}" -eq 36 ]] || { echo "ERROR: expected 36 non-rRNA Rfam features, found ${other_n}" >&2; exit 1; }
+
+{
+    echo '##gff-version 3'
+    grep -v '^#' "${RRNA_NEAR}"
+    grep -v '^#' "${NONREPEAT_OTHER}"
+} | sort -t$'\t' -k1,1V -k4,4n -k5,5n > "${RFGFF}.tmp"
+mv "${RFGFF}.tmp" "${RFGFF}"
+
+rfam_n=$(awk -F'\t' '$0!~/^#/&&NF>=9{n++}END{print n+0}' "${RFGFF}")
+[[ "${rfam_n}" -eq 797 ]] || { echo "ERROR: expected 797 conservative Rfam features, found ${rfam_n}" >&2; exit 1; }
 
 awk -F'\t' '
 BEGIN {OFS="\t"; print "##gff-version 3"}

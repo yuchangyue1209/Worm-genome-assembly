@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# Freeze a NEW run. Release inclusion and historical candidate inclusion are explicit.
+# Freeze a NEW run; never relink the input of a completed analysis.
+# Uses the configured species set, with optional explicit release/candidate input.
 set -euo pipefail
 source "$(dirname "$0")/common.sh"
 require_command orthofinder
 require_command sha256sum
-RUN_ID=${ORTHO_RUN_ID:-"background10_$(date +%Y%m%d_%H%M%S)"}
-[[ "$RUN_ID" =~ ^[A-Za-z0-9_.-]+$ ]] || { echo 'Invalid ORTHO_RUN_ID'; exit 1; }
+RUN_ID=${ORTHO_RUN_ID:-"configured_baseline_$(date +%Y%m%d_%H%M%S)"}
+[[ "$RUN_ID" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]*$ ]] || { echo 'Invalid ORTHO_RUN_ID'; exit 1; }
 RUNROOT="$ORTHO_ROOT/runs/$RUN_ID"
 [[ ! -e "$RUNROOT" ]] || { echo "Run exists: $RUNROOT"; exit 1; }
 
@@ -19,10 +20,13 @@ ADD_RELEASE=${INCLUDE_SCOTTI_RELEASE:-0}
 }
 TAXA=("${SPECIES[@]}")
 if [[ "$ADD_COTTI" == 1 || "$ADD_RELEASE" == 1 ]]; then
+    found_cotti=0
     for sp in "${TAXA[@]}"; do
-        [[ "$sp" != S_cotti ]] || { echo 'S_cotti already configured'; exit 1; }
+        [[ "$sp" != S_cotti ]] || found_cotti=1
     done
-    TAXA+=(S_cotti)
+    if [[ "$found_cotti" == 0 ]]; then
+        TAXA+=(S_cotti)
+    fi
 fi
 
 if [[ "$ADD_RELEASE" == 1 ]]; then
@@ -72,7 +76,7 @@ done
 # Reject duplicate taxa, duplicate IDs and empty proteins before allocating a run.
 python3 - "${CHECK_ARGS[@]}" <<'PY'
 from pathlib import Path
-import sys
+import hashlib,sys
 args=sys.argv[1:]
 taxa=set()
 for sp,name in zip(args[::2],args[1::2]):
@@ -91,11 +95,18 @@ for sp,name in zip(args[::2],args[1::2]):
                 if current is None:raise ValueError('Sequence before header: '+name)
                 length+=len(''.join(line.split()))
     if not ids or not length:raise ValueError('Empty FASTA/last protein: '+name)
-    if sp=='S_cotti' and len(ids)!=9234:raise ValueError('Baseline requires 9234 cotti representatives')
+    if sp=='S_cotti':
+        if len(ids)!=9234:raise ValueError('Baseline requires 9234 cotti representatives')
+        digest=hashlib.sha256(Path(name).read_bytes()).hexdigest()
+        if digest!='07cf93ad5b6edf2c27e5d42745fe425cd9b6029af1810aaf63ab8ee2b0d1d371':
+            raise ValueError('S_cotti input differs from the selected 9234-protein release')
     print(sp,len(ids))
 PY
 
-mkdir -p "$RUNROOT/input"
+# Reserve this run atomically; refuse existing or concurrently created runs.
+mkdir -p "$ORTHO_ROOT/runs"
+mkdir "$RUNROOT"
+mkdir "$RUNROOT/input"
 printf 'species\tinput_source\n' > "$RUNROOT/input_manifest.tsv"
 for i in "${!TAXA[@]}"; do
     sp=${TAXA[$i]}
@@ -114,8 +125,12 @@ if [[ "$ADD_RELEASE" == 1 ]]; then
         > "$RUNROOT/STATUS.txt"
 elif [[ "$ADD_COTTI" == 1 ]]; then
     printf '%s\n' 'HISTORICAL CANDIDATE INPUT: includes cotti filtered7; not a uniform TE-filtered analysis.' > "$RUNROOT/STATUS.txt"
+elif [[ " ${TAXA[*]} " == *" S_cotti "* ]]; then
+    printf '%s\n' \
+        'BASELINE: configured S_cotti input matches the selected 9234-protein release checksum; all 32 TE candidates retained.' \
+        'No uniform TE filtering is implied.' > "$RUNROOT/STATUS.txt"
 else
-    printf '%s\n' 'BACKGROUND EXPLORATION: cotti release was not explicitly added.' > "$RUNROOT/STATUS.txt"
+    printf '%s\n' 'BACKGROUND EXPLORATION: S_cotti is not in this configured species set.' > "$RUNROOT/STATUS.txt"
 fi
 # Preserve the existing search/analysis thread parameters. No restart flags are inferred.
 orthofinder -f "$RUNROOT/input" -t "$THREADS" -a "$THREADS" 2>&1 | tee "$RUNROOT/orthofinder.log"

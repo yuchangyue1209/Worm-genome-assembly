@@ -17,11 +17,16 @@ MEROPS_FASTA=${MEROPS_FASTA:-/work/cyu/databases/merops_12.4/pepunit.lib}
 BUSCO_LINEAGE=${BUSCO_LINEAGE:-metazoa_odb12}
 THREADS=${THREADS:-32}
 
-# Ten-species background set. Keep stable standardized inputs unchanged.
-# Keep this background array stable for existing functional/secretome workflows.
-# cotti release inclusion is explicit in script 03; it does not silently alter other jobs.
+# odb12 is the primary protein-completeness comparison; odb10 is retained as
+# a historical cross-version sensitivity analysis. Never combine the two
+# lineage datasets in one numerical table.
+BUSCO_LINEAGES=(metazoa_odb10 metazoa_odb12)
+
+# Current eleven-species analysis set. S_cotti uses the selected 9,234-protein
+# pre-NCBI scientific release. NCBI accessioning remains a separate step.
 SPECIES=(
   S_solidus
+  S_cotti
   L_intestinalis
   Spirometra_Aus1
   D_latus
@@ -33,23 +38,21 @@ SPECIES=(
   T_multiceps
 )
 
+FOCAL_SPECIES=(S_cotti S_solidus)
+
+COTTI_RELEASE_ROOT=${COTTI_RELEASE_ROOT:-/work/shared/Scotti_release_v1.0_preNCBI_20261118}
+COTTI_RELEASE_SHA256=${COTTI_RELEASE_SHA256:-07cf93ad5b6edf2c27e5d42745fe425cd9b6029af1810aaf63ab8ee2b0d1d371}
+COTTI_PROTEINS=${COTTI_PROTEINS:-"${COTTI_RELEASE_ROOT}/proteins/Scotti_proteins.longest_isoform.v1.0.fa"}
+# Raw/all-isoform input is distinct from the 9,234 representatives above.
+COTTI_ALL_PROTEINS=${COTTI_ALL_PROTEINS:-"${COTTI_RELEASE_ROOT}/proteins/Scotti_proteins.all_isoforms.v1.0.fa"}
+# Historical source root retained for scripts that explicitly request it.
+COTTI_CANDIDATE_ROOT=${COTTI_CANDIDATE_ROOT:-/work/cyu/annotation/scotti-annotation/results/filtered_candidates/Scotti_filtered7_v1}
+COTTI_GFF=${COTTI_GFF:-"${COTTI_RELEASE_ROOT}/annotation/Scotti_nuclear.protein_coding.v1.0.gff3"}
+COTTI_GENOME=${COTTI_GENOME:-"${COTTI_RELEASE_ROOT}/assembly/Scotti_nuclear.fa"}
+
 # Deliberately excluded from the primary analysis. PRJEB1202 is highly
 # fragmented and its protein count is likely inflated; PRJEB35375 lacks a
 # usable public structural annotation.
 EXCLUDED_SPECIES=(S_erinaceieuropaei_PRJEB1202)
 
-# cotti is released; standardized links in an existing server project remain a separate action.
 PENDING_SPECIES=()
-RELEASED_FOCAL_SPECIES=(S_solidus S_cotti)
-SCOTTI_RELEASE=${SCOTTI_RELEASE:-/work/shared/Scotti_release_v1.0_preNCBI_20261118}
-INCLUDE_SCOTTI_RELEASE=${INCLUDE_SCOTTI_RELEASE:-0}
-
-# Six-taxon core describes the biological design; it is not a command to remove outgroups.
-FOCAL_SPECIES=(S_solidus S_cotti)
-CORE_DIPHYLLOBOTHRIIDEA=(S_solidus S_cotti L_intestinalis D_latus Spirometra_Aus1 S_proliferum)
-# Historical candidate mode is retained for reproducing old input freezes.
-INCLUDE_SCOTTI_CANDIDATE=${INCLUDE_SCOTTI_CANDIDATE:-0}
-SCOTTI_CANDIDATE=${SCOTTI_CANDIDATE:-/work/cyu/annotation/scotti-annotation/results/filtered_candidates/Scotti_filtered7_v1}
-SCOTTI_CANDIDATE_STAGE=${SCOTTI_CANDIDATE_STAGE:-"${PROJECT}/02_standardized_candidates/Scotti_filtered7_v1"}
-# Unique new run ID prevents stale symlinks/taxa from an older OrthoFinder input directory.
-ORTHO_RUN_ID=${ORTHO_RUN_ID:-"background10_$(date +%Y%m%d_%H%M%S)"}
